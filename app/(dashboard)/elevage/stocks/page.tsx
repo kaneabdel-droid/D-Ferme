@@ -3,9 +3,14 @@ import { getTenantContext } from '@/utils/supabase/tenant'
 import { Boxes, AlertTriangle, ShieldAlert, Plus, ArrowUpRight, ArrowDownLeft } from 'lucide-react'
 import CreerIntrantModal from './CreerIntrantModal'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function StocksPage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tStocks = dict.elevage?.stocks_page || {}
 
   const { data: intrants } = await supabase
     .from('intrants')
@@ -20,10 +25,10 @@ export default async function StocksPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Aliments & Stocks d'Intrants
+            {tStocks.title || "Aliments & Stocks d'Intrants"}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Gestion des approvisionnements en aliments de bétail, vaccins et produits vétérinaires.
+            {tStocks.subtitle || "Gestion des approvisionnements en aliments de bétail, vaccins et produits vétérinaires."}
           </p>
         </div>
         <CreerIntrantModal />

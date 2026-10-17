@@ -4,9 +4,14 @@ import { Bird, ShieldAlert, CheckCircle2, Calendar, Scale, Layers } from 'lucide
 import CreerBandeModal from './CreerBandeModal'
 import { DEMO_BANDES, DEMO_BATIMENTS, DEMO_ESPECES } from '@/lib/demo-data'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function BandesPage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tBandes = dict.elevage?.bandes_page || {}
 
   let bandes: any[] | null = null
   let batiments: any[] | null = null
@@ -43,10 +48,10 @@ export default async function BandesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Bandes & Volailles en Cohortes
+            {tBandes.title || 'Bandes & Volailles en Cohortes'}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Gérez vos cycles de production avicole, porcine et lots d'engraissement.
+            {tBandes.subtitle || "Gérez vos cycles de production avicole, porcine et lots d'engraissement."}
           </p>
         </div>
         <CreerBandeModal

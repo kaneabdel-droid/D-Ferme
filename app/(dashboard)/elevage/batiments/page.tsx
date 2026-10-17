@@ -3,9 +3,14 @@ import { getTenantContext } from '@/utils/supabase/tenant'
 import { Warehouse, Bird, Beef, Users, CheckCircle2 } from 'lucide-react'
 import CreerBatimentModal from './CreerBatimentModal'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function BatimentsPage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tBatiments = dict.elevage?.batiments_page || {}
 
   const [
     { data: batiments },
@@ -22,10 +27,10 @@ export default async function BatimentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Bâtiments, Poulaillers & Enclos
+            {tBatiments.title || 'Bâtiments, Poulaillers & Enclos'}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Organisation spatiale de la ferme : capacité d'accueil et taux d'occupation des infrastructures.
+            {tBatiments.subtitle || "Organisation spatiale de la ferme : capacité d'accueil et taux d'occupation des infrastructures."}
           </p>
         </div>
         <CreerBatimentModal />

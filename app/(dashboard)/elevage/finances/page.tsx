@@ -4,9 +4,14 @@ import { DollarSign, TrendingUp, TrendingDown, Scale, PiggyBank, Sparkles } from
 import CreerOperationModal from './CreerOperationModal'
 import { DEMO_FINANCES, DEMO_BANDES, DEMO_ANIMAUX } from '@/lib/demo-data'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function FinancesPage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tFinances = dict.elevage?.finances_page || {}
 
   const [
     { data: operations },
@@ -47,10 +52,10 @@ export default async function FinancesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Finances, Ventes & Rentabilité
+            {tFinances.title || 'Finances, Ventes & Rentabilité'}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Suivi des encaissements de ventes, dépenses en intrants et calcul de la marge d'exploitation.
+            {tFinances.subtitle || "Suivi des encaissements de ventes, dépenses en intrants et calcul de la marge d'exploitation."}
           </p>
         </div>
         <CreerOperationModal

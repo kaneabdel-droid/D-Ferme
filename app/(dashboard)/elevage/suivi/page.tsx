@@ -4,9 +4,14 @@ import { Activity, Egg, Milk, Scale, AlertTriangle, Sparkles } from 'lucide-reac
 import CreerSuiviModal from './CreerSuiviModal'
 import { DEMO_SUIVIS, DEMO_BANDES, DEMO_ANIMAUX, DEMO_INTRANTS } from '@/lib/demo-data'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function SuiviPage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tSuivi = dict.elevage?.suivi_page || {}
 
   const [
     { data: suivis },
@@ -42,10 +47,10 @@ export default async function SuiviPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Suivi Quotidien de Production
+            {tSuivi.title || 'Suivi Quotidien de Production'}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Enregistrement des mortalités, pesées, rations d'aliment, récoltes d'œufs et de lait.
+            {tSuivi.subtitle || "Enregistrement des mortalités, pesées, rations d'aliment, récoltes d'œufs et de lait."}
           </p>
         </div>
         <CreerSuiviModal

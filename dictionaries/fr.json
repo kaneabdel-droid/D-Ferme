@@ -188,6 +188,19 @@
   },
   "sidebar": {
     "dashboard": "Tableau de bord",
+    "bandes": "Bandes & Volailles",
+    "animaux": "Bovins & Ruminants",
+    "suivi": "Suivi Quotidien",
+    "sanitaire": "Sécurité Sanitaire",
+    "stocks": "Aliments & Intrants",
+    "batiments": "Bâtiments & Enclos",
+    "finances": "Finances & Marges",
+    "vegetal": "Production Végétale",
+    "parcelles": "Cultures & Parcelles",
+    "recoltes": "Récoltes & Productions",
+    "stocks_vegetaux": "Stocks Végétaux",
+    "ventes_vegetales": "Ventes Végétales",
+    "fourrage": "Synergie Fourrage",
     "membres": "Membres",
     "campagnes": "Campagnes",
     "intrants": "Intrants & Stock",
@@ -202,19 +215,6 @@
     "parametres": "Paramètres",
     "support": "Aide & Support",
     "logout": "Déconnexion",
-    "bandes": "Bandes & Volailles",
-    "animaux": "Bovins & Ruminants",
-    "suivi": "Suivi Quotidien",
-    "sanitaire": "Sécurité Sanitaire",
-    "stocks": "Aliments & Intrants",
-    "batiments": "Bâtiments & Enclos",
-    "finances": "Finances & Marges",
-    "vegetal": "Production Végétale",
-    "parcelles": "Cultures & Parcelles",
-    "recoltes": "Récoltes & Productions",
-    "stocks_vegetaux": "Stocks Végétaux",
-    "ventes_vegetales": "Ventes Végétales",
-    "fourrage": "Synergie Fourrage",
     "section_pilotage": "Pilotage",
     "section_vegetal": "Volet Végétal",
     "section_elevage": "Élevage & Cheptel",
@@ -1770,6 +1770,63 @@
       "health": "Santé & Latence Sanitaire",
       "health_active": "Délai de retrait actif",
       "health_ok": "Aucun sujet sous restriction"
+    },
+    "bandes_page": {
+      "title": "Bandes & Volailles en Cohortes",
+      "subtitle": "Gérez vos cycles de production avicole, porcine et lots d'engraissement.",
+      "new_bande": "Créer une Bande",
+      "empty": "Aucune bande active enregistrée.",
+      "table": {
+        "code": "Code Bande",
+        "espece": "Espèce",
+        "effectif": "Effectif Initial",
+        "actuel": "Effectif Actuel",
+        "batiment": "Bâtiment / Enclos",
+        "date_entree": "Date d'Entrée",
+        "statut": "Statut"
+      }
+    },
+    "suivi_page": {
+      "title": "Suivi Quotidien d'Élevage",
+      "subtitle": "Relevé des pontes, pesées d'échantillons, mortalités et consommations d'aliment.",
+      "record_btn": "Saisir un Relevé Journalier",
+      "kpi_ponte": "Taux de Ponte Moyen",
+      "kpi_fcr": "Indice de Consommation (IC)",
+      "kpi_mortalite": "Taux de Mortalité Global"
+    },
+    "sanitaire_page": {
+      "title": "Sécurité Sanitaire & Délais de Retrait",
+      "subtitle": "Traitements vétérinaires administrés, ordonnances et verrouillage préventif anti-vente pendant la rémanence.",
+      "kpi_active_latency": "Animaux sous Retrait Médical",
+      "kpi_safe": "Conformes pour Consommation",
+      "table": {
+        "animal": "Animal / Bande",
+        "medicament": "Traitement / Vaccin",
+        "dose": "Posologie",
+        "date_fin": "Fin de Rémanence",
+        "statut": "Sécurité"
+      }
+    },
+    "stocks_page": {
+      "title": "Aliments, Médicaments & Intrants d'Élevage",
+      "subtitle": "Gestion des sacs d'aliments (démarrage, croissance, finition), prémix, vaccins et litière.",
+      "add_stock": "Entrée de Stock",
+      "kpi_total_val": "Valeur du Stock d'Intrants",
+      "kpi_alert": "Alertes Seuil Minimum"
+    },
+    "batiments_page": {
+      "title": "Bâtiments, Poulaillers & Enclos",
+      "subtitle": "Infrastructures d'élevage, capacité d'accueil et taux d'occupation des ateliers.",
+      "new_batiment": "Ajouter un Bâtiment",
+      "kpi_total_cap": "Capacité d'Accueil Totale",
+      "kpi_occ_rate": "Taux d'Occupation Global"
+    },
+    "finances_page": {
+      "title": "Finances, Coûts & Marges par Bande",
+      "subtitle": "Analyse de rentabilité analytique par bande ou par tête : coût de revient au kilo, dépenses et marge brute.",
+      "kpi_turnover": "Chiffre d’Affaires Volailles & Viande",
+      "kpi_charges": "Charges Aliments & Santé",
+      "kpi_margin": "Marge Nette Réalisée"
     }
   },
   "landing_ferme": {

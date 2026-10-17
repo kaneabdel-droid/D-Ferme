@@ -3,9 +3,14 @@ import { getTenantContext } from '@/utils/supabase/tenant'
 import { ShieldAlert, AlertTriangle, CheckCircle2, Plus, Calendar, Clock, Sparkles } from 'lucide-react'
 import { DEMO_TRAITEMENTS } from '@/lib/demo-data'
 
+import { getLocale, getDictionary } from '@/dictionaries'
+
 export default async function SanitairePage() {
   const tenant = await getTenantContext()
   const supabase = await createClient()
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
+  const tSanitaire = dict.elevage?.sanitaire_page || {}
 
   const todayStr = new Date().toISOString().split('T')[0]
 
@@ -35,10 +40,10 @@ export default async function SanitairePage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold font-heading text-foreground">
-            Sécurité Sanitaire & Latence Médicamenteuse
+            {tSanitaire.title || 'Sécurité Sanitaire & Latence Médicamenteuse'}
           </h1>
           <p className="text-sm text-foreground-muted mt-1">
-            Contrôle des délais d'attente (délai de retrait) avant vente ou abattage pour garantir la conformité sanitaire.
+            {tSanitaire.subtitle || "Contrôle des délais d'attente (délai de retrait) avant vente ou abattage pour garantir la conformité sanitaire."}
           </p>
         </div>
       </div>

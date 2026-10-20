@@ -201,7 +201,7 @@ export default async function LandingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {/* WhatsApp Direct */}
             <a
-              href="https://wa.me/221775012754?text=Bonjour,%20je%20souhaite%20des%20informations%20sur%20D-Ferme"
+              href="https://wa.me/221708484298?text=Bonjour,%20je%20souhaite%20des%20informations%20sur%20D-Elevage"
               target="_blank"
               rel="noopener noreferrer"
               className="p-6 rounded-2xl bg-background border border-surface-border hover:border-primary hover:shadow-md transition-all text-center flex flex-col items-center group"
@@ -211,12 +211,12 @@ export default async function LandingPage() {
               </div>
               <h3 className="font-bold text-foreground text-base mb-1">WhatsApp & Téléphone</h3>
               <p className="text-xs text-foreground-muted mb-3">Réponse rapide 7j/7</p>
-              <span className="font-semibold text-primary text-sm">+221 77 501 27 54</span>
+              <span className="font-semibold text-primary text-sm">+221 70 848 42 98</span>
             </a>
 
             {/* Email */}
             <a
-              href="mailto:contact@dembasolution.com"
+              href="mailto:support@dembasolution.com"
               className="p-6 rounded-2xl bg-background border border-surface-border hover:border-primary hover:shadow-md transition-all text-center flex flex-col items-center group"
             >
               <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
@@ -224,7 +224,7 @@ export default async function LandingPage() {
               </div>
               <h3 className="font-bold text-foreground text-base mb-1">E-mail Officiel</h3>
               <p className="text-xs text-foreground-muted mb-3">Support commercial et technique</p>
-              <span className="font-semibold text-primary text-sm">contact@dembasolution.com</span>
+              <span className="font-semibold text-primary text-sm">support@dembasolution.com</span>
             </a>
 
             {/* Localisation */}

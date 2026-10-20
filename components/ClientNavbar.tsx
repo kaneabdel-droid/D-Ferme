@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Menu, X, Bird, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import LanguageSelector from '@/components/LanguageSelector'
+import OfflineLandingBanner from './offline/OfflineLandingBanner'
 
 export default function ClientNavbar({ dict, currentLang }: { dict?: any, currentLang: string }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -13,6 +14,7 @@ export default function ClientNavbar({ dict, currentLang }: { dict?: any, curren
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-surface-border bg-background/85 backdrop-blur-md">
+      <OfflineLandingBanner appName="D-FERME" dashboardUrl="/dashboard" loginUrl="/login" />
       {/* Barre supérieure discrète vers Demba Solution */}
       <div className="border-b border-surface-border/60 bg-surface/80 text-xs py-1.5 px-4">
         <div className="container mx-auto flex items-center justify-between">

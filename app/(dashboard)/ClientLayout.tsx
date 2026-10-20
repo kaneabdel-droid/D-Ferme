@@ -72,6 +72,20 @@ export default function ClientLayout({
   const navHorizontalRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
+  useEffect(() => {
+    // S'assurer que le cookie hors-ligne est actif pour le Service Worker
+    document.cookie = 'demba_offline_active=1; path=/; max-age=2592000; SameSite=Lax'
+
+    // Si en ligne, rafraîchir en tâche de fond le shell du dashboard
+    if (typeof navigator !== 'undefined' && navigator.onLine && 'caches' in window) {
+      caches.open('demba-offline-dferme-v3').then((cache) => {
+        fetch('/dashboard').then((res) => {
+          if (res && res.ok) cache.put('/dashboard', res)
+        }).catch(() => {})
+      }).catch(() => {})
+    }
+  }, [])
+
   const isPremium = subscriptionTier === 'premium'
   const aVolaille = typesActivite.includes('volaille')
   const aRuminants = typesActivite.includes('ruminants')

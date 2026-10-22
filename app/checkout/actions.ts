@@ -55,11 +55,13 @@ export async function initiateSubscriptionPayment(
     return { ok: false, error: "Chariow n'est disponible que pour un forfait à prix plein" }
   }
 
-  const { data: userData } = await supabase
+  const admin = createAdminClient()
+
+  const { data: userData } = await admin
     .from('utilisateurs')
-    .select('entreprise_id, entreprises(subscription_tier, devise, code_pays)')
+    .select('entreprise_id, entreprises(nom, subscription_tier, devise, code_pays)')
     .eq('id', user.id)
-    .single()
+    .maybeSingle()
 
   if (!userData?.entreprise_id) {
     return { ok: false, error: 'Exploitation introuvable' }
@@ -73,7 +75,7 @@ export async function initiateSubscriptionPayment(
   }
 
   // Tarifs : lecture base avec repli sur FORFAITS_ELEVAGE
-  const { data: tarifs } = await supabase
+  const { data: tarifs } = await admin
     .from('tarif_abonnement')
     .select('niveau, prix_annuel, prix_mensuel')
     .in('niveau', [planId, currentTier])
@@ -213,6 +215,7 @@ export async function initiateSubscriptionPayment(
               phoneLocal: phoneLocal || '',
               countryCode: entreprise?.code_pays && entreprise.code_pays !== 'AUTRE' ? entreprise.code_pays : 'SN',
               customerEmail: user.email || '',
+              customerName: entreprise?.nom || 'Mon Exploitation',
               returnUrl,
               montantAttendu: montant,
             })

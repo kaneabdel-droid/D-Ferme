@@ -114,7 +114,7 @@ export default function CheckoutClient({
     setIsProcessing(false)
 
     if (!result.ok) {
-      setError(result.error)
+      setError(typeof result.error === 'string' ? result.error : (typeof result.error === 'object' ? JSON.stringify(result.error) : 'Une erreur est survenue lors du paiement.'))
       return
     }
 

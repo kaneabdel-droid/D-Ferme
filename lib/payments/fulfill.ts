@@ -1,5 +1,6 @@
 import crypto from 'node:crypto'
 import { createAdminClient } from '@/utils/supabase/admin'
+import { envoyerEmailsConfirmationFerme } from './emails'
 import type { NormalizedWebhookEvent } from './types'
 
 export type PaymentProvider = 'bictorys' | 'moneroo' | 'chariow' | 'maketou' | 'maketou'
@@ -86,6 +87,16 @@ export async function applyPaymentResult(
       .from('entreprises')
       .update({ subscription_tier: payment.niveau, essai_expire_le: null })
       .eq('id', payment.gie_id)
+
+    envoyerEmailsConfirmationFerme({
+      paymentId: payment.id,
+      entrepriseId: payment.gie_id,
+      niveau: payment.niveau,
+      montant: payment.montant,
+      devise: payment.devise,
+      provider,
+      providerReference: event.providerTransactionId,
+    }).catch((e) => console.error('[Emails] Erreur envoi confirmation D-FERME:', e))
   }
 
   return { processed: true, statut: target }

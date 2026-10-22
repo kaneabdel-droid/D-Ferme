@@ -18,12 +18,12 @@ type InitiateResult =
   | { ok: false; error: string }
 
 const MAKETOU_FALLBACK_PRODUCTS: Record<number, string> = {
-  5000: 'prod_elevage_standard_mensuel',
-  10000: 'prod_elevage_medium_mensuel',
-  15000: 'prod_elevage_premium_mensuel',
-  50000: 'prod_elevage_standard_annuel',
-  100000: 'prod_elevage_medium_annuel',
-  150000: 'prod_elevage_premium_annuel',
+  5000: 'c62a2efe-c38b-4883-a7c3-3ffe834c272c',
+  10000: 'b420f58e-b974-4f38-a0bf-e8be98926294',
+  15000: '03dea104-421f-4f00-823c-167893fe3c6b',
+  50000: '81245501-b96e-4ac9-be2e-2c77fd5a9a6d',
+  100000: '749c1b0c-6cf8-45cc-96b4-bc4e9645d482',
+  150000: '00941762-413f-445a-8ca5-49d57f1b429b',
 }
 
 const CHARIOW_FALLBACK_PRODUCTS: Record<number, string> = {
@@ -153,13 +153,14 @@ export async function initiateSubscriptionPayment(
 
   // Anti double paiement (2/2) : relancer la même offre renvoie vers le paiement déjà
   // ouvert au lieu d'en créer un second (double clic, second onglet, retour arrière).
-  const reutilisable = await paiementEnCoursReutilisable(supabase, userData.entreprise_id, planId, moyenPaiement, montant)
+  const reutilisable = await paiementEnCoursReutilisable(admin, userData.entreprise_id, planId, moyenPaiement, montant)
   if (reutilisable) return reutilisable
 
-  const { data: payment, error: insertError } = await supabase
+  const { data: payment, error: insertError } = await admin
     .from('abonnement_paiements')
     .insert({
       gie_id: userData.entreprise_id,
+      entreprise_id: userData.entreprise_id,
       niveau: planId,
       montant,
       provider,
@@ -172,12 +173,12 @@ export async function initiateSubscriptionPayment(
 
   if (insertError || !payment) {
     if (insertError?.code === '23505') {
-      const concurrent = await paiementEnCoursReutilisable(supabase, userData.entreprise_id, planId, moyenPaiement, montant)
+      const concurrent = await paiementEnCoursReutilisable(admin, userData.entreprise_id, planId, moyenPaiement, montant)
       if (concurrent) return concurrent
       return { ok: false, error: 'Un paiement est déjà en cours pour votre exploitation. Patientez quelques secondes puis réessayez.' }
     }
     console.error('Erreur création paiement abonnement', insertError)
-    return { ok: false, error: "Impossible d'initier le paiement" }
+    return { ok: false, error: insertError?.message || "Impossible d'initier le paiement" }
   }
 
   if (moyenPaiement === 'virement') {
@@ -230,11 +231,11 @@ export async function initiateSubscriptionPayment(
           })
 
   if (!result.ok) {
-    await supabase.from('abonnement_paiements').update({ statut: 'failed' }).eq('id', payment.id)
+    await admin.from('abonnement_paiements').update({ statut: 'failed' }).eq('id', payment.id)
     return { ok: false, error: result.error }
   }
 
-  await supabase
+  await admin
     .from('abonnement_paiements')
     .update({ provider_reference: result.providerTransactionId, checkout_url: result.checkoutUrl })
     .eq('id', payment.id)
@@ -252,7 +253,7 @@ const DUREE_REUTILISATION_MS = 30 * 60 * 1000
  *   le webhook le traite et le marque doublon si besoin) et on laisse en créer un neuf.
  */
 async function paiementEnCoursReutilisable(
-  supabase: Awaited<ReturnType<typeof createClient>>,
+  supabase: any,
   gieId: string,
   niveau: string,
   moyenPaiement: MoyenPaiement,

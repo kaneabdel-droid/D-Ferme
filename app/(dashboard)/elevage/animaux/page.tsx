@@ -16,20 +16,23 @@ export default async function AnimauxPage() {
   const [
     { data: animaux },
     { data: batiments },
-    { data: especes }
+    { data: especes },
+    { data: races }
   ] = await Promise.all([
     supabase
       .from('animaux')
       .select('*, batiments(nom)')
       .order('date_entree', { ascending: false }),
     supabase.from('batiments').select('id, nom').order('nom'),
-    supabase.from('especes_elevage').select('code, nom').in('categorie', ['bovin', 'petit_ruminant', 'porcin']).order('nom')
+    supabase.from('especes_elevage').select('code, nom').in('categorie', ['bovin', 'petit_ruminant', 'porcin']).order('nom'),
+    supabase.from('races_elevage').select('id, nom, espece_code').order('nom')
   ])
 
   const isDemo = !animaux || animaux.length === 0
   const displayAnimaux = isDemo ? (DEMO_ANIMAUX as any[]) : animaux
   const displayBatiments = (batiments && batiments.length > 0) ? batiments : DEMO_BATIMENTS
   const displayEspeces = (especes && especes.length > 0) ? especes : DEMO_ESPECES
+  const displayRaces = races || []
 
   return (
     <div className="space-y-6">
@@ -46,6 +49,7 @@ export default async function AnimauxPage() {
         <CreerAnimalModal
           batiments={displayBatiments}
           especes={displayEspeces}
+          races={displayRaces}
         />
       </div>
 
@@ -91,7 +95,8 @@ export default async function AnimauxPage() {
 
                   <p className="text-xs text-foreground-muted mb-4 capitalize">
                     {a.nom_ou_surnom ? `"${a.nom_ou_surnom}" — ` : ''}
-                    {a.espece_code.replace(/_/g, ' ')} &bull; Sexe: {a.sexe}
+                    {a.espece_code?.replace(/_/g, ' ')}
+                    {a.race ? ` (${a.race})` : ''} &bull; Sexe: {a.sexe}
                   </p>
 
                   <div className="space-y-2 text-sm border-t border-surface-border/50 pt-3">
@@ -152,8 +157,9 @@ export default async function AnimauxPage() {
             Enregistrez les numéros de boucle de vos bovins, ovins ou caprins pour assurer le suivi individuel.
           </p>
           <CreerAnimalModal
-            batiments={batiments || []}
-            especes={especes || []}
+            batiments={displayBatiments}
+            especes={displayEspeces}
+            races={displayRaces}
           />
         </div>
       )}

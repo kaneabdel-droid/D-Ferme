@@ -4,11 +4,15 @@ import { useState } from 'react'
 import { Plus, X, Boxes } from 'lucide-react'
 import { creerIntrant } from './actions'
 
-export default function CreerIntrantModal() {
+export default function CreerIntrantModal({
+  categories = []
+}: {
+  categories?: Array<{ code: string; nom: string }>
+}) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [categorie, setCategorie] = useState('aliment')
+  const [categorie, setCategorie] = useState(categories[0]?.code || 'aliment')
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -82,13 +86,25 @@ export default function CreerIntrantModal() {
                     required
                     className="w-full px-3 py-2 text-sm rounded-xl border border-surface-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
-                    <option value="aliment">Aliment / Rations</option>
-                    <option value="medicament">Médicament vétérinaire</option>
-                    <option value="vaccin">Vaccin</option>
-                    <option value="vitamines">Vitamines & Minéraux</option>
-                    <option value="litiere">Litière / Paille</option>
-                    <option value="desinfectant">Désinfectant / Hygiène</option>
-                    <option value="autre">Autre consommable</option>
+                    {categories.length > 0 ? (
+                      categories.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.nom}
+                        </option>
+                      ))
+                    ) : (
+                      <>
+                        <option value="aliment">Aliment / Rations</option>
+                        <option value="medicament">Médicament vétérinaire</option>
+                        <option value="vaccin">Vaccin</option>
+                        <option value="vitamines">Vitamines & Minéraux</option>
+                        <option value="litiere">Litière / Paille</option>
+                        <option value="desinfectant">Désinfectant / Hygiène</option>
+                        <option value="semences">Semences & Plants</option>
+                        <option value="engrais">Engrais & Fertilisants</option>
+                        <option value="autre">Autre consommable</option>
+                      </>
+                    )}
                   </select>
                 </div>
               </div>

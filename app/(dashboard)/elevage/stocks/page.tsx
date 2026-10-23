@@ -12,11 +12,20 @@ export default async function StocksPage() {
   const dict = await getDictionary(locale)
   const tStocks = dict.elevage?.stocks_page || {}
 
-  const { data: intrants } = await supabase
-    .from('intrants')
-    .select('*')
-    .order('categorie')
-    .order('nom')
+  const [
+    { data: intrants },
+    { data: categories }
+  ] = await Promise.all([
+    supabase
+      .from('intrants')
+      .select('*')
+      .order('categorie')
+      .order('nom'),
+    supabase
+      .from('categories_intrants')
+      .select('code, nom')
+      .order('nom')
+  ])
 
   const alertesStock = intrants?.filter((i) => i.stock_actuel <= i.stock_minimum) || []
 
@@ -31,7 +40,7 @@ export default async function StocksPage() {
             {tStocks.subtitle || "Gestion des approvisionnements en aliments de bétail, vaccins et produits vétérinaires."}
           </p>
         </div>
-        <CreerIntrantModal />
+        <CreerIntrantModal categories={categories || []} />
       </div>
 
       {/* Alerte stock faible */}

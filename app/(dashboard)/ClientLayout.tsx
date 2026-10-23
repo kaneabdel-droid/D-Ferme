@@ -26,7 +26,12 @@ import {
   Store,
   Layers,
   Crown,
-  UploadCloud
+  UploadCloud,
+  BookOpen,
+  FileSpreadsheet,
+  BarChart3,
+  Scale,
+  Database
 } from 'lucide-react'
 import { DeviseProvider } from '@/components/DeviseProvider'
 
@@ -192,8 +197,52 @@ export default function ClientLayout({
       ],
     },
     {
+      titre: 'Comptabilité & Trésorerie',
+      items: [
+        { 
+          key: 'journaux', 
+          label: 'Journaux de Saisie', 
+          href: '/comptabilite', 
+          icon: BookOpen 
+        },
+        { 
+          key: 'bilan', 
+          label: 'Bilan Comptable', 
+          href: '/comptabilite/bilan', 
+          icon: FileSpreadsheet,
+          isPremiumLocked: !isPremium
+        },
+        { 
+          key: 'resultat', 
+          label: 'Compte de Résultat', 
+          href: '/comptabilite/resultat', 
+          icon: BarChart3,
+          isPremiumLocked: !isPremium
+        },
+        { 
+          key: 'balance', 
+          label: 'Grand Livre & Balance', 
+          href: '/comptabilite/balance', 
+          icon: Scale,
+          isPremiumLocked: !isPremium
+        },
+        { 
+          key: 'plan_comptable', 
+          label: 'Plan Comptable SYSCOHADA', 
+          href: '/comptabilite/plan-comptable', 
+          icon: BookOpen 
+        },
+      ],
+    },
+    {
       titre: dict.sidebar?.section_admin || 'Administration',
       items: [
+        { 
+          key: 'referentiel', 
+          label: 'Référentiel Espèces & Intrants', 
+          href: '/parametres/referentiel', 
+          icon: Database 
+        },
         { 
           key: 'import_donnees', 
           label: dict.sidebar?.import_donnees || 'Importer des données', 

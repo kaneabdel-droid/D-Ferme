@@ -6,10 +6,12 @@ import { creerAnimal } from './actions'
 
 export default function CreerAnimalModal({
   batiments,
-  especes
+  especes,
+  races = []
 }: {
   batiments: Array<{ id: string; nom: string }>
   especes: Array<{ code: string; nom: string }>
+  races?: Array<{ id: string; nom: string; espece_code?: string }>
 }) {
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -89,9 +91,9 @@ export default function CreerAnimalModal({
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-foreground mb-1">Espèce / Race *</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Espèce *</label>
                   <select
                     name="espece_code"
                     required
@@ -103,6 +105,21 @@ export default function CreerAnimalModal({
                       </option>
                     ))}
                   </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Race</label>
+                  <input
+                    type="text"
+                    name="race"
+                    list="races-list"
+                    placeholder="ex: Ladoum, Gobra..."
+                    className="w-full px-3 py-2 text-sm rounded-xl border border-surface-border bg-background focus:outline-none focus:ring-2 focus:ring-secondary/20"
+                  />
+                  <datalist id="races-list">
+                    {races.map((r) => (
+                      <option key={r.id || r.nom} value={r.nom} />
+                    ))}
+                  </datalist>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-foreground mb-1">Sexe *</label>

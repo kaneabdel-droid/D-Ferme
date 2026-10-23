@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, X, Beef } from 'lucide-react'
 import { creerAnimal } from './actions'
 
@@ -13,6 +14,7 @@ export default function CreerAnimalModal({
   especes: Array<{ code: string; nom: string }>
   races?: Array<{ id: string; nom: string; espece_code?: string }>
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -30,6 +32,7 @@ export default function CreerAnimalModal({
       setError(res.error)
     } else {
       setOpen(false)
+      router.refresh()
     }
   }
 

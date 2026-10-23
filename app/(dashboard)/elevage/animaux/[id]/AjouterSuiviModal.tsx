@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, X, Scale } from 'lucide-react'
 import { ajouterSuiviAnimal } from '../actions'
 
@@ -13,6 +14,7 @@ export default function AjouterSuiviModal({
   numeroBoucle: string
   poidsActuel?: number | null
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -32,6 +34,11 @@ export default function AjouterSuiviModal({
       setError(res.error)
     } else {
       setOpen(false)
+      if (res?.newId) {
+        router.push(`/elevage/animaux/${res.newId}`)
+      } else {
+        router.refresh()
+      }
     }
   }
 

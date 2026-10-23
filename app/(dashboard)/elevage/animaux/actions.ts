@@ -3,6 +3,8 @@
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { revalidatePath } from 'next/cache'
+import { isUuid } from '@/lib/uuid'
+import { DEMO_ANIMAUX, DEMO_INTRANTS } from '@/lib/demo-data'
 
 export async function creerAnimal(formData: FormData) {
   const tenant = await getTenantContext()
@@ -14,7 +16,8 @@ export async function creerAnimal(formData: FormData) {
   const nom_ou_surnom = (formData.get('nom_ou_surnom') as string) || null
   const espece_code = formData.get('espece_code') as string
   const race = (formData.get('race') as string) || null
-  const batiment_id = (formData.get('batiment_id') as string) || null
+  const raw_batiment_id = (formData.get('batiment_id') as string) || null
+  const batiment_id = isUuid(raw_batiment_id) ? raw_batiment_id : null
   const sexe = formData.get('sexe') as 'M' | 'F'
   const date_naissance = (formData.get('date_naissance') as string) || null
   const date_entree = (formData.get('date_entree') as string) || new Date().toISOString().split('T')[0]
@@ -79,7 +82,8 @@ export async function modifierAnimal(formData: FormData) {
   const nom_ou_surnom = (formData.get('nom_ou_surnom') as string) || null
   const espece_code = formData.get('espece_code') as string
   const race = (formData.get('race') as string) || null
-  const batiment_id = (formData.get('batiment_id') as string) || null
+  const raw_batiment_id = (formData.get('batiment_id') as string) || null
+  const batiment_id = isUuid(raw_batiment_id) ? raw_batiment_id : null
   const sexe = formData.get('sexe') as 'M' | 'F'
   const date_naissance = (formData.get('date_naissance') as string) || null
   const poids_actuel_kg = parseFloat((formData.get('poids_actuel_kg') as string) || '0')
@@ -87,6 +91,72 @@ export async function modifierAnimal(formData: FormData) {
   const etat_sante = (formData.get('etat_sante') as string) || 'sain'
   const pere_boucle = (formData.get('pere_boucle') as string) || null
   const mere_boucle = (formData.get('mere_boucle') as string) || null
+
+  // Si l'ID n'est pas un UUID (ex: demo-anim-1), matérialiser ou mettre à jour par numéro de boucle
+  if (!isUuid(id)) {
+    const { data: existingAnimal } = await supabase
+      .from('animaux')
+      .select('id')
+      .eq('entreprise_id', tenant.entrepriseId)
+      .eq('numero_boucle', numero_boucle)
+      .maybeSingle()
+
+    if (existingAnimal?.id) {
+      const { error: updateErr } = await supabase
+        .from('animaux')
+        .update({
+          numero_boucle,
+          nom_ou_surnom,
+          espece_code,
+          race,
+          batiment_id,
+          sexe,
+          date_naissance,
+          poids_actuel_kg: poids_actuel_kg > 0 ? poids_actuel_kg : null,
+          en_lactation,
+          etat_sante,
+          pere_boucle,
+          mere_boucle,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', existingAnimal.id)
+        .eq('entreprise_id', tenant.entrepriseId)
+
+      if (updateErr) return { error: updateErr.message }
+
+      revalidatePath(`/elevage/animaux/${existingAnimal.id}`)
+      revalidatePath('/elevage/animaux')
+      return { success: true, newId: existingAnimal.id }
+    } else {
+      const { data: newAnimal, error: insertErr } = await supabase
+        .from('animaux')
+        .insert({
+          entreprise_id: tenant.entrepriseId,
+          numero_boucle,
+          nom_ou_surnom,
+          espece_code,
+          race,
+          batiment_id,
+          sexe,
+          date_naissance,
+          date_entree: new Date().toISOString().split('T')[0],
+          origine: 'ne_sur_ferme',
+          poids_actuel_kg: poids_actuel_kg > 0 ? poids_actuel_kg : null,
+          en_lactation,
+          etat_sante,
+          pere_boucle,
+          mere_boucle
+        })
+        .select('id')
+        .single()
+
+      if (insertErr) return { error: insertErr.message }
+
+      revalidatePath(`/elevage/animaux/${newAnimal.id}`)
+      revalidatePath('/elevage/animaux')
+      return { success: true, newId: newAnimal.id }
+    }
+  }
 
   const { error } = await supabase
     .from('animaux')
@@ -135,6 +205,92 @@ export async function ajouterSoinAnimal(formData: FormData) {
     return { error: 'Animal et médicament/vaccin obligatoires' }
   }
 
+  // Si l'animal est un ID démo, le matérialiser en base
+  let realAnimalId = animal_id
+  let newAnimalId: string | undefined
+
+  if (!isUuid(realAnimalId)) {
+    const demoAnim = (DEMO_ANIMAUX as any[]).find((a) => a.id === animal_id) || {
+      numero_boucle: 'SN-001',
+      nom_ou_surnom: 'Sujet Ferme',
+      espece_code: 'bovin_lait',
+      sexe: 'F',
+      etat_sante: 'sain'
+    }
+
+    const { data: existingAnimal } = await supabase
+      .from('animaux')
+      .select('id')
+      .eq('entreprise_id', tenant.entrepriseId)
+      .eq('numero_boucle', demoAnim.numero_boucle)
+      .maybeSingle()
+
+    if (existingAnimal?.id) {
+      realAnimalId = existingAnimal.id
+      newAnimalId = existingAnimal.id
+    } else {
+      const { data: newAnimal, error: animErr } = await supabase
+        .from('animaux')
+        .insert({
+          entreprise_id: tenant.entrepriseId,
+          numero_boucle: demoAnim.numero_boucle,
+          nom_ou_surnom: demoAnim.nom_ou_surnom || null,
+          espece_code: demoAnim.espece_code || 'bovin_lait',
+          race: demoAnim.race || null,
+          sexe: demoAnim.sexe || 'F',
+          date_entree: new Date().toISOString().split('T')[0],
+          poids_actuel_kg: demoAnim.poids_actuel_kg || null,
+          en_lactation: demoAnim.en_lactation || false,
+          etat_sante: 'sain'
+        })
+        .select('id')
+        .single()
+
+      if (animErr) return { error: animErr.message }
+      realAnimalId = newAnimal.id
+      newAnimalId = newAnimal.id
+    }
+  }
+
+  // Si l'intrant est un ID démo, le matérialiser en base
+  let realIntrantId = intrant_id
+  if (!isUuid(realIntrantId)) {
+    const demoIntrant = (DEMO_INTRANTS as any[]).find((i) => i.id === intrant_id) || {
+      nom: 'Médicament Vétérinaire',
+      categorie: 'medicament',
+      unite: 'dose',
+      stock_actuel: 10,
+      latence_jours_defaut: duree_latence_jours
+    }
+
+    const { data: existingIntrant } = await supabase
+      .from('intrants')
+      .select('id')
+      .eq('entreprise_id', tenant.entrepriseId)
+      .eq('nom', demoIntrant.nom)
+      .maybeSingle()
+
+    if (existingIntrant?.id) {
+      realIntrantId = existingIntrant.id
+    } else {
+      const { data: newIntrant, error: intrantErr } = await supabase
+        .from('intrants')
+        .insert({
+          entreprise_id: tenant.entrepriseId,
+          nom: demoIntrant.nom,
+          categorie: demoIntrant.categorie || 'medicament',
+          unite: demoIntrant.unite || 'dose',
+          stock_actuel: 10,
+          latence_jours_defaut: duree_latence_jours
+        })
+        .select('id')
+        .single()
+
+      if (intrantErr) return { error: intrantErr.message }
+      realIntrantId = newIntrant.id
+    }
+  }
+
   // Calcul date fin de latence
   const d = new Date(date_administration)
   d.setDate(d.getDate() + (duree_latence_jours || 0))
@@ -142,8 +298,8 @@ export async function ajouterSoinAnimal(formData: FormData) {
 
   const { error: traitError } = await supabase.from('traitements_medicaux').insert({
     entreprise_id: tenant.entrepriseId,
-    animal_id,
-    intrant_id,
+    animal_id: realAnimalId,
+    intrant_id: realIntrantId,
     date_administration,
     quantite_administree,
     dose_par_sujet,
@@ -168,20 +324,20 @@ export async function ajouterSoinAnimal(formData: FormData) {
       date_fin_latence: duree_latence_jours > 0 ? date_fin_latence : null,
       updated_at: new Date().toISOString()
     })
-    .eq('id', animal_id)
+    .eq('id', realAnimalId)
     .eq('entreprise_id', tenant.entrepriseId)
 
   // Décrémenter stock intrant si possible
-  const { data: intrant } = await supabase.from('intrants').select('stock_actuel').eq('id', intrant_id).single()
+  const { data: intrant } = await supabase.from('intrants').select('stock_actuel').eq('id', realIntrantId).single()
   if (intrant && intrant.stock_actuel > 0) {
     const nouveauStock = Math.max(0, Number(intrant.stock_actuel) - quantite_administree)
-    await supabase.from('intrants').update({ stock_actuel: nouveauStock }).eq('id', intrant_id)
+    await supabase.from('intrants').update({ stock_actuel: nouveauStock }).eq('id', realIntrantId)
   }
 
-  revalidatePath(`/elevage/animaux/${animal_id}`)
+  revalidatePath(`/elevage/animaux/${realAnimalId}`)
   revalidatePath('/elevage/animaux')
   revalidatePath('/elevage/sanitaire')
-  return { success: true }
+  return { success: true, newId: newAnimalId }
 }
 
 export async function ajouterSuiviAnimal(formData: FormData) {
@@ -198,9 +354,56 @@ export async function ajouterSuiviAnimal(formData: FormData) {
 
   if (!animal_id) return { error: 'ID animal manquant' }
 
+  // Si l'animal est un ID démo, le matérialiser en base
+  let realAnimalId = animal_id
+  let newAnimalId: string | undefined
+
+  if (!isUuid(realAnimalId)) {
+    const demoAnim = (DEMO_ANIMAUX as any[]).find((a) => a.id === animal_id) || {
+      numero_boucle: 'SN-001',
+      nom_ou_surnom: 'Sujet Ferme',
+      espece_code: 'bovin_lait',
+      sexe: 'F',
+      etat_sante: 'sain'
+    }
+
+    const { data: existingAnimal } = await supabase
+      .from('animaux')
+      .select('id')
+      .eq('entreprise_id', tenant.entrepriseId)
+      .eq('numero_boucle', demoAnim.numero_boucle)
+      .maybeSingle()
+
+    if (existingAnimal?.id) {
+      realAnimalId = existingAnimal.id
+      newAnimalId = existingAnimal.id
+    } else {
+      const { data: newAnimal, error: animErr } = await supabase
+        .from('animaux')
+        .insert({
+          entreprise_id: tenant.entrepriseId,
+          numero_boucle: demoAnim.numero_boucle,
+          nom_ou_surnom: demoAnim.nom_ou_surnom || null,
+          espece_code: demoAnim.espece_code || 'bovin_lait',
+          race: demoAnim.race || null,
+          sexe: demoAnim.sexe || 'F',
+          date_entree: new Date().toISOString().split('T')[0],
+          poids_actuel_kg: demoAnim.poids_actuel_kg || null,
+          en_lactation: demoAnim.en_lactation || false,
+          etat_sante: 'sain'
+        })
+        .select('id')
+        .single()
+
+      if (animErr) return { error: animErr.message }
+      realAnimalId = newAnimal.id
+      newAnimalId = newAnimal.id
+    }
+  }
+
   const { error } = await supabase.from('suivi_quotidien').insert({
     entreprise_id: tenant.entrepriseId,
-    animal_id,
+    animal_id: realAnimalId,
     date_suivi,
     poids_moyen_mesure_kg: poids_kg > 0 ? poids_kg : null,
     lait_recolte_litres: lait_litres > 0 ? lait_litres : 0,
@@ -217,11 +420,11 @@ export async function ajouterSuiviAnimal(formData: FormData) {
         poids_actuel_kg: poids_kg,
         updated_at: new Date().toISOString()
       })
-      .eq('id', animal_id)
+      .eq('id', realAnimalId)
       .eq('entreprise_id', tenant.entrepriseId)
   }
 
-  revalidatePath(`/elevage/animaux/${animal_id}`)
+  revalidatePath(`/elevage/animaux/${realAnimalId}`)
   revalidatePath('/elevage/animaux')
-  return { success: true }
+  return { success: true, newId: newAnimalId }
 }

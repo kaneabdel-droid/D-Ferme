@@ -4,6 +4,8 @@ import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { revalidatePath } from 'next/cache'
 
+import { isUuid } from '@/lib/uuid'
+
 export async function enregistrerOperation(formData: FormData) {
   const tenant = await getTenantContext()
   if (!tenant) return { error: 'Non authentifié' }
@@ -11,8 +13,10 @@ export async function enregistrerOperation(formData: FormData) {
   const supabase = await createClient()
 
   const type_operation = formData.get('type_operation') as string
-  const bande_id = (formData.get('bande_id') as string) || null
-  const animal_id = (formData.get('animal_id') as string) || null
+  const raw_bande_id = (formData.get('bande_id') as string) || null
+  const raw_animal_id = (formData.get('animal_id') as string) || null
+  const bande_id = isUuid(raw_bande_id) ? raw_bande_id : null
+  const animal_id = isUuid(raw_animal_id) ? raw_animal_id : null
   const date_operation = (formData.get('date_operation') as string) || new Date().toISOString().split('T')[0]
   const montant_total = parseFloat(formData.get('montant_total') as string || '0')
   const quantite = parseFloat(formData.get('quantite') as string || '1')

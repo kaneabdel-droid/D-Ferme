@@ -4,6 +4,8 @@ import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { revalidatePath } from 'next/cache'
 
+import { isUuid } from '@/lib/uuid'
+
 export async function creerBande(formData: FormData) {
   const tenant = await getTenantContext()
   if (!tenant) return { error: 'Non authentifié' }
@@ -12,7 +14,8 @@ export async function creerBande(formData: FormData) {
 
   const code_bande = formData.get('code_bande') as string
   const espece_code = formData.get('espece_code') as string
-  const batiment_id = formData.get('batiment_id') as string || null
+  const raw_batiment_id = formData.get('batiment_id') as string || null
+  const batiment_id = isUuid(raw_batiment_id) ? raw_batiment_id : null
   const date_entree = formData.get('date_entree') as string || new Date().toISOString().split('T')[0]
   const effectif_initial = parseInt(formData.get('effectif_initial') as string, 10)
   const poids_moyen_initial_kg = parseFloat(formData.get('poids_moyen_initial_kg') as string || '0.040')

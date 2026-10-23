@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Plus, X, ShieldAlert, Pill } from 'lucide-react'
 import { ajouterSoinAnimal } from '../actions'
 
@@ -13,6 +14,7 @@ export default function AjouterSoinModal({
   numeroBoucle: string
   intrants: Array<{ id: string; nom: string; latence_jours_defaut: number; unite: string }>
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -43,6 +45,11 @@ export default function AjouterSoinModal({
       setError(res.error)
     } else {
       setOpen(false)
+      if (res?.newId) {
+        router.push(`/elevage/animaux/${res.newId}`)
+      } else {
+        router.refresh()
+      }
     }
   }
 

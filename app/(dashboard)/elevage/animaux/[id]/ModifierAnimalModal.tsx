@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Edit3, X, Beef } from 'lucide-react'
 import { modifierAnimal } from '../actions'
 
@@ -15,6 +16,7 @@ export default function ModifierAnimalModal({
   especes: Array<{ code: string; nom: string }>
   races: Array<{ nom: string; espece_code?: string }>
 }) {
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -35,6 +37,11 @@ export default function ModifierAnimalModal({
       setError(res.error)
     } else {
       setOpen(false)
+      if (res?.newId) {
+        router.push(`/elevage/animaux/${res.newId}`)
+      } else {
+        router.refresh()
+      }
     }
   }
 

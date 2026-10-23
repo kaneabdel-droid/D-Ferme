@@ -23,6 +23,7 @@ import AjouterSoinModal from './AjouterSoinModal'
 import AjouterSuiviModal from './AjouterSuiviModal'
 import ModifierAnimalModal from './ModifierAnimalModal'
 import PrintSectionButton from '@/components/PrintSectionButton'
+import { isUuid } from '@/lib/uuid'
 
 export default async function AnimalFicheSoinsPage({
   params
@@ -33,20 +34,32 @@ export default async function AnimalFicheSoinsPage({
   const tenant = await getTenantContext()
   const supabase = await createClient()
 
+  const isUuidId = isUuid(id)
+  const demoFallback = (DEMO_ANIMAUX as any[]).find((a) => a.id === id) || (DEMO_ANIMAUX as any[])[0]
+
   const [
-    { data: animalData },
+    animalRes,
     { data: batimentsData },
     { data: especesData },
     { data: racesData },
     { data: intrantsData },
-    { data: traitementsData },
-    { data: suivisData }
+    traitementsRes,
+    suivisRes
   ] = await Promise.all([
-    supabase
-      .from('animaux')
-      .select('*, batiments(id, nom)')
-      .eq('id', id)
-      .maybeSingle(),
+    isUuidId
+      ? supabase
+          .from('animaux')
+          .select('*, batiments(id, nom)')
+          .eq('id', id)
+          .maybeSingle()
+      : (demoFallback?.numero_boucle && tenant?.entrepriseId
+          ? supabase
+              .from('animaux')
+              .select('*, batiments(id, nom)')
+              .eq('entreprise_id', tenant.entrepriseId)
+              .eq('numero_boucle', demoFallback.numero_boucle)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null })),
     supabase.from('batiments').select('id, nom').order('nom'),
     supabase.from('especes_elevage').select('code, nom').order('nom'),
     supabase.from('races_elevage').select('nom, espece_code').order('nom'),
@@ -55,29 +68,46 @@ export default async function AnimalFicheSoinsPage({
       .select('id, nom, latence_jours_defaut, unite')
       .in('categorie', ['medicament', 'vaccin', 'vitamines', 'autre'])
       .order('nom'),
-    supabase
-      .from('traitements_medicaux')
-      .select('*, intrants(nom, unite, categorie)')
-      .eq('animal_id', id)
-      .order('date_administration', { ascending: false }),
-    supabase
-      .from('suivi_quotidien')
-      .select('*')
-      .eq('animal_id', id)
-      .order('date_suivi', { ascending: false })
+    isUuidId
+      ? supabase
+          .from('traitements_medicaux')
+          .select('*, intrants(nom, unite, categorie)')
+          .eq('animal_id', id)
+          .order('date_administration', { ascending: false })
+      : Promise.resolve({ data: null, error: null }),
+    isUuidId
+      ? supabase
+          .from('suivi_quotidien')
+          .select('*')
+          .eq('animal_id', id)
+          .order('date_suivi', { ascending: false })
+      : Promise.resolve({ data: null, error: null })
   ])
 
-  // Fallback démo si l'animal n'est pas encore en base ou id demo
-  const isDemoAnimal = !animalData && id.startsWith('demo-')
-  let animal = animalData
+  let animal = animalRes.data
+  let traitementsData = traitementsRes.data
+  let suivisData = suivisRes.data
 
-  if (!animal && isDemoAnimal) {
-    animal = (DEMO_ANIMAUX as any[]).find((a) => a.id === id) || null
+  // Si l'animal a été trouvé en base par numéro de boucle pour un id démo
+  if (animal && !isUuidId) {
+    const [tRes, sRes] = await Promise.all([
+      supabase
+        .from('traitements_medicaux')
+        .select('*, intrants(nom, unite, categorie)')
+        .eq('animal_id', animal.id)
+        .order('date_administration', { ascending: false }),
+      supabase
+        .from('suivi_quotidien')
+        .select('*')
+        .eq('animal_id', animal.id)
+        .order('date_suivi', { ascending: false })
+    ])
+    traitementsData = tRes.data
+    suivisData = sRes.data
   }
 
   if (!animal) {
-    // Si ID inconnu, prendre le premier animal de démo pour ne jamais bloquer l'utilisateur
-    animal = (DEMO_ANIMAUX as any[])[0]
+    animal = demoFallback
   }
 
   const batiments = (batimentsData && batimentsData.length > 0) ? batimentsData : DEMO_BATIMENTS

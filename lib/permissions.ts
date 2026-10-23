@@ -31,7 +31,7 @@ export const PERMISSION_MODULES: PermissionModule[] = [
   { key: 'sanitaire', label: 'Santé & Latence Médicale', group: 'Sécurité Sanitaire', paths: ['/elevage/sanitaire'], actions: CRUD },
   { key: 'stocks', label: 'Aliments & Intrants', group: 'Logistique', paths: ['/elevage/stocks'], actions: CRUD },
   { key: 'batiments', label: 'Bâtiments & Enclos', group: 'Infrastructures', paths: ['/elevage/batiments'], actions: CRUD },
-  { key: 'finances', label: 'Finances & Ventes', group: 'Gestion', paths: ['/elevage/finances'], actions: CRUD },
+  { key: 'finances', label: 'Finances, Compta & Budget', group: 'Gestion', paths: ['/elevage/finances', '/comptabilite'], actions: CRUD },
   { key: 'parametres', label: 'Paramètres', group: 'Administration', paths: ['/parametres'], actions: ['read', 'update'] },
 ]
 

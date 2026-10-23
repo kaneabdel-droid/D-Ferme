@@ -39,6 +39,7 @@ export const FORFAITS_ELEVAGE: Record<TierElevage, ForfaitInfo> = {
       'Bâtiments, enclos & capacités d’accueil',
       'Suivi généalogique & identification par boucle',
       'Gestion des équipements & matériels d’élevage',
+      'Suivi budgétaire : Prévisions & Réalisations (Écarts & Alertes)',
       'Prévisions de production',
       'Jusqu’à 5 utilisateurs',
     ],

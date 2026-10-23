@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { BookOpen, FileText, Scale, BarChart3, FileSpreadsheet, Crown } from 'lucide-react'
+import { BookOpen, FileText, Scale, BarChart3, FileSpreadsheet, Crown, Calculator } from 'lucide-react'
 import { getTenantContext } from '@/utils/supabase/tenant'
 
 export default async function ComptabiliteLayout({
@@ -53,6 +53,15 @@ export default async function ComptabiliteLayout({
         >
           <FileText className="w-4 h-4 text-primary" />
           <span>Journaux de Saisie</span>
+        </Link>
+
+        <Link
+          href="/comptabilite/budget"
+          className="bg-surface text-foreground-muted hover:text-foreground rounded-xl px-4 py-2.5 text-sm font-semibold flex items-center gap-2 border border-surface-border transition-colors hover:border-primary/40 group"
+        >
+          <Calculator className="w-4 h-4 text-emerald-600" />
+          <span>Suivi Budgétaire</span>
+          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-bold">Médium</span>
         </Link>
 
         <Link

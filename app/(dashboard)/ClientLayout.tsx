@@ -31,7 +31,8 @@ import {
   FileSpreadsheet,
   BarChart3,
   Scale,
-  Database
+  Database,
+  Calculator
 } from 'lucide-react'
 import { DeviseProvider } from '@/components/DeviseProvider'
 
@@ -41,6 +42,7 @@ type NavItem = {
   href: string
   icon: any
   isPremiumLocked?: boolean
+  isMediumLocked?: boolean
 }
 
 type MenuSection = {
@@ -92,6 +94,7 @@ export default function ClientLayout({
   }, [])
 
   const isPremium = subscriptionTier === 'premium'
+  const isMediumOrHigher = subscriptionTier === 'medium' || subscriptionTier === 'premium'
   const aVolaille = typesActivite.includes('volaille')
   const aRuminants = typesActivite.includes('ruminants')
   const aLait = typesActivite.includes('lait')
@@ -204,6 +207,13 @@ export default function ClientLayout({
           label: 'Journaux de Saisie', 
           href: '/comptabilite', 
           icon: BookOpen 
+        },
+        { 
+          key: 'budget', 
+          label: 'Suivi Budgétaire', 
+          href: '/comptabilite/budget', 
+          icon: Calculator,
+          isMediumLocked: !isMediumOrHigher,
         },
         { 
           key: 'bilan', 
@@ -370,6 +380,11 @@ export default function ClientLayout({
                           PRO
                         </span>
                       )}
+                      {item.isMediumLocked && (
+                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
+                          MÉDIUM
+                        </span>
+                      )}
                     </Link>
                   </li>
                 )
@@ -513,6 +528,11 @@ export default function ClientLayout({
                               {item.isPremiumLocked && (
                                 <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-600 dark:text-amber-400 font-bold">
                                   PREMIUM
+                                </span>
+                              )}
+                              {item.isMediumLocked && (
+                                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-bold">
+                                  MÉDIUM
                                 </span>
                               )}
                             </Link>

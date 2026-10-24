@@ -29,19 +29,27 @@ export default function ReferentielClient({
   initialRaces,
   initialSpeculations,
   initialCategories,
-  entrepriseId
+  entrepriseId,
+  dict = {},
+  locale = 'fr',
 }: {
   initialEspeces: any[]
   initialRaces: any[]
   initialSpeculations: any[]
   initialCategories: any[]
   entrepriseId: string
+  dict?: any
+  locale?: string
 }) {
   const [activeTab, setActiveTab] = useState<TabType>('especes')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
+
+  const refDict = dict.referentiel || {}
+  const refTabs = refDict.tabs || {}
+  const refBtns = refDict.buttons || {}
 
   // Espèce form state
   const [selectedEspeceForRace, setSelectedEspeceForRace] = useState(initialEspeces[0]?.code || '')
@@ -97,14 +105,14 @@ export default function ReferentielClient({
             href="/parametres"
             className="p-2.5 rounded-xl bg-surface border border-surface-border text-foreground hover:border-primary transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 rtl:-scale-x-100" />
           </Link>
           <div>
             <h1 className="text-2xl font-bold font-heading text-foreground">
-              Référentiels & Catalogues d'Exploitation
+              {refDict.title || "Référentiels & Catalogues d'Exploitation"}
             </h1>
             <p className="text-xs text-foreground-muted mt-0.5">
-              Personnalisez vos espèces d'élevage, races, spéculations végétales et catégories d'intrants.
+              {refDict.subtitle || "Personnalisez vos espèces d'élevage, races, spéculations végétales et catégories d'intrants."}
             </p>
           </div>
         </div>
@@ -114,13 +122,13 @@ export default function ReferentielClient({
             setError(null)
             setModalOpen(true)
           }}
-          className="px-4 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 shadow-sm transition-all flex items-center gap-2 self-start sm:self-auto"
+          className="px-4 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primary/90 shadow-sm transition-all flex items-center gap-2 self-start sm:self-auto cursor-pointer"
         >
           <Plus className="w-4 h-4" />
-          {activeTab === 'especes' && 'Ajouter une Espèce'}
-          {activeTab === 'races' && 'Ajouter une Race'}
-          {activeTab === 'speculations' && 'Ajouter une Spéculation'}
-          {activeTab === 'categories' && 'Ajouter une Catégorie'}
+          {activeTab === 'especes' && (refBtns.add_espece || 'Ajouter une Espèce')}
+          {activeTab === 'races' && (refBtns.add_race || 'Ajouter une Race')}
+          {activeTab === 'speculations' && (refBtns.add_speculation || 'Ajouter une Spéculation')}
+          {activeTab === 'categories' && (refBtns.add_categorie || 'Ajouter une Catégorie')}
         </button>
       </div>
 
@@ -141,50 +149,50 @@ export default function ReferentielClient({
       <div className="flex flex-wrap gap-2 border-b border-surface-border pb-4">
         <button
           onClick={() => setActiveTab('especes')}
-          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'especes'
               ? 'bg-primary text-white shadow-sm'
               : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
           }`}
         >
           <Beef className="w-4 h-4" />
-          <span>Espèces d'élevage ({initialEspeces.length})</span>
+          <span>{refTabs.especes || "Espèces d'élevage"} ({initialEspeces.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('races')}
-          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'races'
               ? 'bg-secondary text-white shadow-sm'
               : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
           }`}
         >
           <Dna className="w-4 h-4" />
-          <span>Races & Souches ({initialRaces.length})</span>
+          <span>{refTabs.races || 'Races & Souches'} ({initialRaces.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('speculations')}
-          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'speculations'
               ? 'bg-emerald-600 text-white shadow-sm'
               : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
           }`}
         >
           <Sprout className="w-4 h-4" />
-          <span>Spéculations Végétales ({initialSpeculations.length})</span>
+          <span>{refTabs.speculations || 'Spéculations Végétales'} ({initialSpeculations.length})</span>
         </button>
 
         <button
           onClick={() => setActiveTab('categories')}
-          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all ${
+          className={`px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all cursor-pointer ${
             activeTab === 'categories'
               ? 'bg-amber-600 text-white shadow-sm'
               : 'bg-surface text-foreground-muted hover:text-foreground border border-surface-border'
           }`}
         >
           <Boxes className="w-4 h-4" />
-          <span>Catégories d'Intrants ({initialCategories.length})</span>
+          <span>{refTabs.categories || "Catégories d'Intrants"} ({initialCategories.length})</span>
         </button>
       </div>
 

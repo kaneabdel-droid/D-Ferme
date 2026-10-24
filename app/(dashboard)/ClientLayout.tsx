@@ -200,45 +200,45 @@ export default function ClientLayout({
       ],
     },
     {
-      titre: 'Comptabilité & Trésorerie',
+      titre: dict.sidebar?.section_compta || 'Comptabilité & Trésorerie',
       items: [
         { 
           key: 'journaux', 
-          label: 'Journaux de Saisie', 
+          label: dict.sidebar?.journaux || 'Journaux de Saisie', 
           href: '/comptabilite', 
           icon: BookOpen 
         },
         { 
           key: 'budget', 
-          label: 'Suivi Budgétaire', 
+          label: dict.sidebar?.budget || 'Suivi Budgétaire', 
           href: '/comptabilite/budget', 
           icon: Calculator,
           isMediumLocked: !isMediumOrHigher,
         },
         { 
           key: 'bilan', 
-          label: 'Bilan Comptable', 
+          label: dict.sidebar?.bilan || 'Bilan Comptable', 
           href: '/comptabilite/bilan', 
           icon: FileSpreadsheet,
           isPremiumLocked: !isPremium
         },
         { 
           key: 'resultat', 
-          label: 'Compte de Résultat', 
+          label: dict.sidebar?.resultat || 'Compte de Résultat', 
           href: '/comptabilite/resultat', 
           icon: BarChart3,
           isPremiumLocked: !isPremium
         },
         { 
           key: 'balance', 
-          label: 'Grand Livre & Balance', 
+          label: dict.sidebar?.balance || 'Grand Livre & Balance', 
           href: '/comptabilite/balance', 
           icon: Scale,
           isPremiumLocked: !isPremium
         },
         { 
           key: 'plan_comptable', 
-          label: 'Plan Comptable SYSCOHADA', 
+          label: dict.sidebar?.plan_comptable || 'Plan Comptable SYSCOHADA', 
           href: '/comptabilite/plan-comptable', 
           icon: BookOpen 
         },
@@ -249,7 +249,7 @@ export default function ClientLayout({
       items: [
         { 
           key: 'referentiel', 
-          label: 'Référentiel Espèces & Intrants', 
+          label: dict.sidebar?.referentiel || 'Référentiel Espèces & Intrants', 
           href: '/parametres/referentiel', 
           icon: Database 
         },

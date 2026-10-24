@@ -220,12 +220,23 @@
     "section_vegetal": "Crop Production",
     "section_elevage": "Livestock & Herd",
     "section_stocks_finances": "Inventory & Finances",
-    "section_admin": "Administration"
+    "section_admin": "Administration",
+    "section_compta": "Accounting & Treasury",
+    "journaux": "Entry Journals",
+    "budget": "Budget Tracking",
+    "bilan": "Balance Sheet",
+    "resultat": "Income Statement",
+    "balance": "General Ledger & Trial Balance",
+    "plan_comptable": "SYSCOHADA Chart of Accounts",
+    "referentiel": "Species & Inputs Catalog",
+    "import_donnees": "Import Data",
+    "premium_badge": "Premium",
+    "medium_badge": "Medium"
   },
   "header": {
     "admin": "Admin",
-    "open_sidebar": "Ouvrir la barre latérale",
-    "close_sidebar": "Fermer la barre latérale"
+    "open_sidebar": "Open sidebar",
+    "close_sidebar": "Close sidebar"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -444,13 +455,13 @@
     "act_vegetal_desc": "Parcels, phytosanitary treatments, harvests.",
     "menu_layout_title": "Navigation Display",
     "menu_layout_desc": "Choose between a sidebar or an agricultural mega-menu.",
-    "nom": "Nom de l'Agroferme / Exploitation",
-    "telephone": "Téléphone de Contact",
-    "adresse": "Localisation / Adresse de la Ferme",
-    "devise": "Devise Monétaire Principale",
-    "save": "Enregistrer les paramètres",
-    "saving": "Enregistrement...",
-    "success": "Paramètres mis à jour avec succès."
+    "nom": "Farm / Agribusiness Name",
+    "telephone": "Contact Phone",
+    "adresse": "Farm Location / Address",
+    "devise": "Primary Currency",
+    "save": "Save Settings",
+    "saving": "Saving...",
+    "success": "Settings updated successfully."
   },
   "common": {
     "cancel": "Cancel",
@@ -794,10 +805,10 @@
     "card_unavailable": "Card payment is not available yet. Contact support to subscribe."
   },
   "update_password": {
-    "title": "Mettre à jour le mot de passe",
-    "desc": "Saisissez votre nouveau mot de passe.",
-    "label": "Nouveau mot de passe",
-    "submit": "Enregistrer"
+    "title": "Update Password",
+    "desc": "Enter your new password.",
+    "label": "New Password",
+    "submit": "Save"
   },
   "bilans": {
     "title": "Reports & Statements",
@@ -2101,7 +2112,14 @@
     "tab_recoltes": "Harvests & Yields",
     "tab_stocks": "Inventory & Warehouses",
     "tab_ventes": "Crop Sales",
-    "tab_fourrage": "Forage & Livestock Synergy"
+    "tab_fourrage": "Forage & Livestock Synergy",
+    "btn_nouvelle_parcelle": "New Plot",
+    "btn_enregistrer_recolte": "Record Harvest",
+    "btn_nouvelle_vente": "New Sale",
+    "tab_cultures": "Crops & Plots",
+    "tab_rendements": "Harvests & Yields",
+    "tab_magasins": "Stocks & Warehouses",
+    "tab_factures": "Sales & Invoices"
   },
   "elevage": {
     "dashboard_header": {
@@ -2237,5 +2255,66 @@
       "premium_btn": "Select Premium"
     },
     "footer": "D-Ferme — A solution from DEMBA SOLUTION suite. All rights reserved."
+  },
+  "comptabilite": {
+    "title": "Farm Accounting & Treasury",
+    "subtitle": "Agricultural Revised SYSCOHADA: General journal, trial balance, income statement, and balance sheet.",
+    "premium_active": "Premium Plan Active",
+    "unlock_premium": "Unlock Balance Sheet & Income (Premium)",
+    "tabs": {
+      "journaux": "Entry Journals",
+      "budget": "Budget Tracking",
+      "bilan": "Balance Sheet",
+      "resultat": "Income Statement",
+      "balance": "General Ledger & Trial Balance",
+      "plan": "SYSCOHADA Chart of Accounts"
+    },
+    "journal": {
+      "title": "General Accounting Journal",
+      "desc": "Chronological record of all financial flows of the farm operation.",
+      "print": "Print Journal",
+      "new_entry": "New Entry",
+      "kpi_pieces": "Accounting Vouchers Count",
+      "kpi_debit": "Total Period Debits",
+      "kpi_credit": "Total Period Credits",
+      "filter_label": "Filter by Auxiliary Journal",
+      "all_journals": "All Journals"
+    },
+    "balance_page": {
+      "title": "General Trial Balance",
+      "desc": "Summary table of cumulative movements and closing balances by farm account.",
+      "balanced": "Trial Balance Perfectly Balanced",
+      "unbalanced": "Imbalance detected"
+    },
+    "bilan_page": {
+      "title": "Farm Balance Sheet",
+      "desc": "Balance sheet snapshot: Assets (property & receivables) and Liabilities (equity & commitments).",
+      "balanced": "Balance Sheet Perfectly Balanced (Assets = Liabilities)"
+    },
+    "resultat_page": {
+      "title": "Farm Income Statement",
+      "desc": "Economic performance: Revenue, gross agro-pastoral margin, and net operational result."
+    },
+    "plan_page": {
+      "title": "Agricultural SYSCOHADA Chart of Accounts",
+      "desc": "Official revised SYSCOHADA nomenclature for agricultural farm operations.",
+      "add_account": "New Account"
+    }
+  },
+  "referentiel": {
+    "title": "Farm Catalogs & References",
+    "subtitle": "Customize your livestock species, breeds, crop varieties, and input categories.",
+    "tabs": {
+      "especes": "Species & Poultry",
+      "races": "Breeds & Strains",
+      "speculations": "Plant Crops",
+      "categories": "Input Categories"
+    },
+    "buttons": {
+      "add_espece": "Add Species",
+      "add_race": "Add Breed",
+      "add_speculation": "Add Crop",
+      "add_categorie": "Add Category"
+    }
   }
 }

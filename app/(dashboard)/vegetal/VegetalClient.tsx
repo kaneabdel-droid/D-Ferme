@@ -159,7 +159,7 @@ export default function VegetalClient({
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary text-white text-xs font-semibold hover:bg-primary-hover shadow-xs cursor-pointer transition-colors"
           >
             <Plus className="w-4 h-4" />
-            <span>Nouvelle Parcelle</span>
+            <span>{dict.vegetal?.btn_nouvelle_parcelle || 'Nouvelle Parcelle'}</span>
           </button>
           <button
             type="button"
@@ -167,7 +167,7 @@ export default function VegetalClient({
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-surface-border text-foreground text-xs font-semibold hover:bg-black/5 shadow-xs cursor-pointer transition-colors"
           >
             <Wheat className="w-4 h-4 text-amber-500" />
-            <span>Enregistrer Récolte</span>
+            <span>{dict.vegetal?.btn_enregistrer_recolte || 'Enregistrer Récolte'}</span>
           </button>
           <button
             type="button"
@@ -175,7 +175,7 @@ export default function VegetalClient({
             className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-surface-border text-foreground text-xs font-semibold hover:bg-black/5 shadow-xs cursor-pointer transition-colors"
           >
             <Store className="w-4 h-4 text-emerald-500" />
-            <span>Nouvelle Vente</span>
+            <span>{dict.vegetal?.btn_nouvelle_vente || 'Nouvelle Vente'}</span>
           </button>
         </div>
       </div>
@@ -263,7 +263,7 @@ export default function VegetalClient({
           }`}
         >
           <Sprout className="w-4 h-4" />
-          <span>Cultures & Parcelles ({parcelles.length})</span>
+          <span>{dict.vegetal?.tab_parcelles || 'Cultures & Parcelles'} ({parcelles.length})</span>
         </button>
 
         <button
@@ -276,7 +276,7 @@ export default function VegetalClient({
           }`}
         >
           <Wheat className="w-4 h-4" />
-          <span>Récoltes & Rendements ({recoltes.length})</span>
+          <span>{dict.vegetal?.tab_recoltes || 'Récoltes & Rendements'} ({recoltes.length})</span>
         </button>
 
         <button
@@ -289,7 +289,7 @@ export default function VegetalClient({
           }`}
         >
           <Boxes className="w-4 h-4" />
-          <span>Stocks & Magasins ({stocks.length})</span>
+          <span>{dict.vegetal?.tab_stocks || 'Stocks & Magasins'} ({stocks.length})</span>
         </button>
 
         <button
@@ -302,7 +302,7 @@ export default function VegetalClient({
           }`}
         >
           <Store className="w-4 h-4" />
-          <span>Ventes Végétales ({ventes.length})</span>
+          <span>{dict.vegetal?.tab_ventes || 'Ventes Végétales'} ({ventes.length})</span>
         </button>
 
         <button
@@ -315,7 +315,7 @@ export default function VegetalClient({
           }`}
         >
           <HeartHandshake className="w-4 h-4 text-emerald-500" />
-          <span>Synergie Fourrage & Cheptel</span>
+          <span>{dict.vegetal?.tab_fourrage || 'Synergie Fourrage & Cheptel'}</span>
         </button>
       </div>
 

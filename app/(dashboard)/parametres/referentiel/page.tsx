@@ -1,5 +1,6 @@
 import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
+import { getDictionary, getLocale } from '@/dictionaries'
 import { redirect } from 'next/navigation'
 import ReferentielClient from './ReferentielClient'
 
@@ -7,6 +8,8 @@ export default async function ReferentielPage() {
   const tenant = await getTenantContext()
   if (!tenant) redirect('/login')
 
+  const locale = await getLocale()
+  const dict = await getDictionary(locale)
   const supabase = await createClient()
 
   const [
@@ -44,6 +47,8 @@ export default async function ReferentielPage() {
       initialSpeculations={speculations || []}
       initialCategories={categories || []}
       entrepriseId={tenant.entrepriseId}
+      dict={dict}
+      locale={locale}
     />
   )
 }

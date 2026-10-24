@@ -219,7 +219,18 @@
     "section_vegetal": "Volet Végétal",
     "section_elevage": "Élevage & Cheptel",
     "section_stocks_finances": "Stocks & Finances",
-    "section_admin": "Administration"
+    "section_admin": "Administration",
+    "section_compta": "Comptabilité & Trésorerie",
+    "journaux": "Journaux de Saisie",
+    "budget": "Suivi Budgétaire",
+    "bilan": "Bilan Comptable",
+    "resultat": "Compte de Résultat",
+    "balance": "Grand Livre & Balance",
+    "plan_comptable": "Plan Comptable SYSCOHADA",
+    "referentiel": "Référentiel Espèces & Intrants",
+    "import_donnees": "Importer des données",
+    "premium_badge": "Prémium",
+    "medium_badge": "Médium"
   },
   "header": {
     "admin": "Admin",
@@ -1738,7 +1749,14 @@
     "tab_recoltes": "Récoltes & Rendements",
     "tab_stocks": "Stocks & Magasins",
     "tab_ventes": "Ventes Végétales",
-    "tab_fourrage": "Synergie Fourrage & Cheptel"
+    "tab_fourrage": "Synergie Fourrage & Cheptel",
+    "btn_nouvelle_parcelle": "Nouvelle Parcelle",
+    "btn_enregistrer_recolte": "Enregistrer Récolte",
+    "btn_nouvelle_vente": "Nouvelle Vente",
+    "tab_cultures": "Cultures & Parcelles",
+    "tab_rendements": "Récoltes & Rendements",
+    "tab_magasins": "Stocks & Magasins",
+    "tab_factures": "Ventes & Factures"
   },
   "elevage": {
     "dashboard_header": {
@@ -1874,5 +1892,66 @@
       "premium_btn": "Choisir Prémium"
     },
     "footer": "D-Ferme — Une solution de la suite DEMBA SOLUTION. Tous droits réservés."
+  },
+  "comptabilite": {
+    "title": "Comptabilité & Trésorerie d'Exploitation",
+    "subtitle": "SYSCOHADA Révisé agricole : Livre-journal, balance générale, compte de résultat et bilan.",
+    "premium_active": "Forfait Prémium Actif",
+    "unlock_premium": "Débloquer Bilan & Résultat (Prémium)",
+    "tabs": {
+      "journaux": "Journaux de Saisie",
+      "budget": "Suivi Budgétaire",
+      "bilan": "Bilan Comptable",
+      "resultat": "Compte de Résultat",
+      "balance": "Grand Livre & Balance",
+      "plan": "Plan Comptable SYSCOHADA"
+    },
+    "journal": {
+      "title": "Livre-Journal des Écritures",
+      "desc": "Enregistrement chronologique de tous les flux financiers de l'exploitation agricole.",
+      "print": "Imprimer le Journal",
+      "new_entry": "Nouvelle Écriture",
+      "kpi_pieces": "Nombre de Pièces Comptables",
+      "kpi_debit": "Total Débits Période",
+      "kpi_credit": "Total Crédits Période",
+      "filter_label": "Filtrer par Journal Auxiliaire",
+      "all_journals": "Tous les Journaux"
+    },
+    "balance_page": {
+      "title": "Balance Générale des Comptes",
+      "desc": "Tableau récapitulatif des flux cumulés et des soldes de clôture par compte d'exploitation.",
+      "balanced": "Balance Parfaitement Équilibrée",
+      "unbalanced": "Déséquilibre détecté"
+    },
+    "bilan_page": {
+      "title": "Bilan Comptable d'Exploitation",
+      "desc": "Photographie patrimoniale : Actifs (biens & créances) et Passifs (capitaux & engagements).",
+      "balanced": "Bilan Parfaitement Équilibré (Actif = Passif)"
+    },
+    "resultat_page": {
+      "title": "Compte de Résultat de l'Exploitation",
+      "desc": "Performance économique : Chiffre d'affaires, marge brute agro-pastorale et résultat net d'exercice."
+    },
+    "plan_page": {
+      "title": "Plan Comptable SYSCOHADA Agricole",
+      "desc": "Nomenclature officielle SYSCOHADA révisée des comptes de l'exploitation agricole.",
+      "add_account": "Nouveau Compte"
+    }
+  },
+  "referentiel": {
+    "title": "Référentiels & Catalogues d'Exploitation",
+    "subtitle": "Personnalisez vos espèces d'élevage, races, spéculations végétales et catégories d'intrants.",
+    "tabs": {
+      "especes": "Espèces & Volailles",
+      "races": "Races & Variétés",
+      "speculations": "Spéculations Végétales",
+      "categories": "Catégories d'Intrants"
+    },
+    "buttons": {
+      "add_espece": "Ajouter une Espèce",
+      "add_race": "Ajouter une Race",
+      "add_speculation": "Ajouter une Spéculation",
+      "add_categorie": "Ajouter une Catégorie"
+    }
   }
 }

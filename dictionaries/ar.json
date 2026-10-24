@@ -220,12 +220,23 @@
     "section_vegetal": "الإنتاج النباتي",
     "section_elevage": "الثروة الحيوانية",
     "section_stocks_finances": "المخزون والمالية",
-    "section_admin": "الإدارة والدعم"
+    "section_admin": "الإدارة والدعم",
+    "section_compta": "المحاسبة والخزينة",
+    "journaux": "سجلات القيود اليومية",
+    "budget": "متابعة الميزانية",
+    "bilan": "الميزانية العمومية",
+    "resultat": "حساب النتائج والأرباح",
+    "balance": "دفتر الأستاذ وميزان المراجعة",
+    "plan_comptable": "دليل الحسابات سيسكوهادا",
+    "referentiel": "دليل السلالات والمدخلات",
+    "import_donnees": "استيراد البيانات",
+    "premium_badge": "مميز",
+    "medium_badge": "متوسط"
   },
   "header": {
-    "admin": "Admin",
-    "open_sidebar": "Ouvrir la barre latérale",
-    "close_sidebar": "Fermer la barre latérale"
+    "admin": "مسؤول",
+    "open_sidebar": "فتح القائمة الجانبية",
+    "close_sidebar": "إغلاق القائمة الجانبية"
   },
   "dashboard": {
     "title": "لوحة القيادة",
@@ -444,13 +455,13 @@
     "act_vegetal_desc": "القطع الأرضية، المعالجات النباتية، الحصاد.",
     "menu_layout_title": "عرض شريط التنقل",
     "menu_layout_desc": "اختر بين القائمة الجانبية أو القائمة العلوية الشاملة.",
-    "nom": "Nom de l'Agroferme / Exploitation",
-    "telephone": "Téléphone de Contact",
-    "adresse": "Localisation / Adresse de la Ferme",
-    "devise": "Devise Monétaire Principale",
-    "save": "Enregistrer les paramètres",
-    "saving": "Enregistrement...",
-    "success": "Paramètres mis à jour avec succès."
+    "nom": "اسم المزرعة / الاستثمار الفلاحي",
+    "telephone": "هاتف الاتصال",
+    "adresse": "موقع / عنوان المزرعة",
+    "devise": "العملة النقدية الرئيسية",
+    "save": "حفظ الإعدادات",
+    "saving": "جارٍ الحفظ...",
+    "success": "تم تحديث الإعدادات بنجاح."
   },
   "common": {
     "cancel": "إلغاء",
@@ -794,10 +805,10 @@
     "card_unavailable": "الدفع بالبطاقة غير متاح بعد. تواصل مع الدعم للاشتراك."
   },
   "update_password": {
-    "title": "Mettre à jour le mot de passe",
-    "desc": "Saisissez votre nouveau mot de passe.",
-    "label": "Nouveau mot de passe",
-    "submit": "Enregistrer"
+    "title": "تحديث كلمة المرور",
+    "desc": "أدخل كلمة المرور الجديدة الخاصة بك.",
+    "label": "كلمة المرور الجديدة",
+    "submit": "حفظ"
   },
   "bilans": {
     "title": "الميزانيات والكشوفات",
@@ -2101,7 +2112,14 @@
     "tab_recoltes": "الحصاد والإنتاجية",
     "tab_stocks": "المخازن والمستودعات",
     "tab_ventes": "مبيعات المحاصيل",
-    "tab_fourrage": "التكامل العلفي والحيواني"
+    "tab_fourrage": "التكامل العلفي والحيواني",
+    "btn_nouvelle_parcelle": "قطعة أرض جديدة",
+    "btn_enregistrer_recolte": "تسجيل حصاد",
+    "btn_nouvelle_vente": "عملية بيع جديدة",
+    "tab_cultures": "المحاصيل والقطع",
+    "tab_rendements": "الحصاد والإنتاجية",
+    "tab_magasins": "المخازن والمستودعات",
+    "tab_factures": "المبيعات والفواتير"
   },
   "elevage": {
     "dashboard_header": {
@@ -2237,5 +2255,66 @@
       "premium_btn": "اختيار الممتازة"
     },
     "footer": "D-Ferme — حل برمجي متكامل من باقة DEMBA SOLUTION. جميع الحقوق محفوظة."
+  },
+  "comptabilite": {
+    "title": "محاسبة وخزينة المزرعة",
+    "subtitle": "نظام سيسكوهادا الزراعي المعدل: دفتر اليومية، ميزان المراجعة، حساب النتائج والميزانية العمومية.",
+    "premium_active": "خطة مميزة نشطة",
+    "unlock_premium": "فتح الميزانية والنتائج (مميز)",
+    "tabs": {
+      "journaux": "سجلات القيود اليومية",
+      "budget": "متابعة الميزانية",
+      "bilan": "الميزانية العمومية",
+      "resultat": "حساب الأرباح والخسائر",
+      "balance": "دفتر الأستاذ وميزان المراجعة",
+      "plan": "دليل الحسابات سيسكوهادا"
+    },
+    "journal": {
+      "title": "دفتر اليومية للقيود المحاسبية",
+      "desc": "تسجيل زمني لكافة المعاملات والتدفقات المالية للمزرعة.",
+      "print": "طباعة اليومية",
+      "new_entry": "قيد محاسبي جديد",
+      "kpi_pieces": "عدد المستندات المحاسبية",
+      "kpi_debit": "إجمالي المدين للفترة",
+      "kpi_credit": "إجمالي الدائن للفترة",
+      "filter_label": "تصفية حسب اليومية المساعدة",
+      "all_journals": "جميع السجلات"
+    },
+    "balance_page": {
+      "title": "ميزان المراجعة العام للحسابات",
+      "desc": "جدول ملخص للحركات التراكمية وأرصدة الإقفال حسب حسابات الاستغلال.",
+      "balanced": "ميزان مراجعة متوازن تماماً",
+      "unbalanced": "تم اكتشاف خلل في التوازن"
+    },
+    "bilan_page": {
+      "title": "الميزانية العمومية للمزرعة",
+      "desc": "نظرة شاملة على الذمة المالية: الأصول (الممتلكات والمستحقات) والخصوم (رأس المال والالتزامات).",
+      "balanced": "الميزانية متوازنة تماماً (الأصول = الخصوم)"
+    },
+    "resultat_page": {
+      "title": "حساب نتائج الاستغلال الزراعي",
+      "desc": "الأداء الاقتصادي: رقم المعاملات، الهامش الإجمالي الزراعي وصافي نتيجة السنة المالية."
+    },
+    "plan_page": {
+      "title": "دليل الحسابات الزراعي سيسكوهادا",
+      "desc": "قائمة الحسابات المحاسبية المعتمدة للاستغلال الزراعي والحيواني.",
+      "add_account": "حساب جديد"
+    }
+  },
+  "referentiel": {
+    "title": "المراجع وكتالوجات المزرعة",
+    "subtitle": "تخصيص سلالات التربية، الفصائل، المحاصيل الزراعية وفئات المدخلات والأعلاف.",
+    "tabs": {
+      "especes": "سلالات المواشي والدواجن",
+      "races": "الفصائل والأنواع",
+      "speculations": "المحاصيل الزراعية",
+      "categories": "فئات المدخلات"
+    },
+    "buttons": {
+      "add_espece": "إضافة سلالة",
+      "add_race": "إضافة فصيلة",
+      "add_speculation": "إضافة محصول",
+      "add_categorie": "إضافة فئة"
+    }
   }
 }

@@ -1,5 +1,6 @@
 import { getEcritures, getPlanComptable } from './actions'
 import NouvelleEcritureModal from './NouvelleEcritureModal'
+import ImportJournauxModal from './ImportJournauxModal'
 import Link from 'next/link'
 import { FileText, Filter, BookOpen, Layers, CheckCircle2, TrendingUp, TrendingDown, DollarSign } from 'lucide-react'
 import PrintSectionButton from '@/components/PrintSectionButton'
@@ -53,8 +54,9 @@ export default async function ComptabilitePage(props: {
             {jDict.desc || "Enregistrement chronologique de tous les flux financiers de l'exploitation agricole."}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <PrintSectionButton sectionId="journal-print" label={jDict.print || 'Imprimer le Journal'} />
+          <ImportJournauxModal />
           <NouvelleEcritureModal plan={plan || []} />
         </div>
       </div>

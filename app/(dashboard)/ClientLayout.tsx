@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import LanguageSelector from '@/components/LanguageSelector'
 import { OfflineSyncBar } from '@/components/offline/OfflineSyncBar'
+import { warmAppOfflineCache } from '@/lib/offline/warmer'
 import { 
   LayoutDashboard, 
   Menu,
@@ -83,13 +84,21 @@ export default function ClientLayout({
     // S'assurer que le cookie hors-ligne est actif pour le Service Worker
     document.cookie = 'demba_offline_active=1; path=/; max-age=2592000; SameSite=Lax'
 
-    // Si en ligne, rafraîchir en tâche de fond le shell du dashboard
-    if (typeof navigator !== 'undefined' && navigator.onLine && 'caches' in window) {
-      caches.open('demba-offline-dferme-v3').then((cache) => {
-        fetch('/dashboard').then((res) => {
-          if (res && res.ok) cache.put('/dashboard', res)
-        }).catch(() => {})
-      }).catch(() => {})
+    if (typeof navigator !== 'undefined' && navigator.serviceWorker?.controller) {
+      navigator.serviceWorker.controller.postMessage({ type: 'SET_OFFLINE_SESSION', active: true })
+    }
+
+    // Réchauffer proactivement les routes clés de D-FERME
+    if (typeof navigator !== 'undefined' && navigator.onLine) {
+      const routesToWarm = [
+        '/dashboard',
+        '/elevage',
+        '/vegetal',
+        '/comptabilite',
+        '/parametres',
+        '/support',
+      ]
+      warmAppOfflineCache(routesToWarm, 'demba-offline-dferme-v4')
     }
   }, [])
 

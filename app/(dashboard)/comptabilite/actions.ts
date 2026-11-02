@@ -330,3 +330,74 @@ export async function getBilan() {
     equilibre: Math.abs(totalActif - totalPassif) < 0.01
   }
 }
+
+export type ImportEcriturePayload = {
+  journal: string
+  date_ecriture: string
+  numero_piece?: string
+  libelle: string
+  lignes: Array<{
+    compte: string
+    libelle?: string
+    debit: number
+    credit: number
+  }>
+}
+
+export async function importerEcrituresBatch(ecritures: ImportEcriturePayload[]) {
+  const supabase = await createClient()
+  const tenant = await getTenantContext()
+  if (!tenant) return { error: 'Non authentifié' }
+  if (!ecritures || ecritures.length === 0) return { error: 'Aucune écriture à importer' }
+
+  let countImportees = 0
+
+  for (const ec of ecritures) {
+    const journal = ec.journal || 'od'
+    const dateEcriture = ec.date_ecriture || new Date().toISOString().split('T')[0]
+    const numeroPiece = (ec.numero_piece || '').trim()
+    const libelle = (ec.libelle || '').trim() || 'Écriture importée'
+
+    const { data: ecriture, error: errEcriture } = await supabase
+      .from('ecritures_comptables')
+      .insert({
+        entreprise_id: tenant.entrepriseId,
+        journal,
+        date_ecriture: dateEcriture,
+        numero_piece: numeroPiece || null,
+        libelle,
+        validee: true,
+      })
+      .select('id')
+      .single()
+
+    if (errEcriture || !ecriture) {
+      console.warn('Erreur insertion en-tête import d-ferme:', errEcriture?.message)
+      continue
+    }
+
+    const lignesToInsert = ec.lignes.map((l) => ({
+      ecriture_id: ecriture.id,
+      entreprise_id: tenant.entrepriseId,
+      compte: l.compte,
+      libelle: (l.libelle || libelle).trim(),
+      debit: Number(l.debit || 0),
+      credit: Number(l.credit || 0),
+    }))
+
+    const { error: errLignes } = await supabase
+      .from('lignes_ecritures_comptables')
+      .insert(lignesToInsert)
+
+    if (!errLignes) {
+      countImportees++
+    }
+  }
+
+  revalidatePath('/comptabilite')
+  revalidatePath('/comptabilite/balance')
+  revalidatePath('/comptabilite/bilan')
+  revalidatePath('/comptabilite/resultat')
+  return { success: true, count: countImportees }
+}
+

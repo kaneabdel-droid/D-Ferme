@@ -1,3 +1,4 @@
+import { ClientSecurityShield } from "@/components/ClientSecurityShield";
 import type { Metadata } from 'next'
 import { Inter, Outfit, Cairo } from 'next/font/google'
 import './globals.css'
@@ -25,6 +26,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={isRtl ? 'rtl' : 'ltr'} suppressHydrationWarning className={`${inter.variable} ${outfit.variable} ${cairo.variable} h-full antialiased`}>
       <body className="antialiased min-h-screen bg-background text-foreground font-sans">
+        <ClientSecurityShield />
         <RegisterServiceWorker />
         {children}
       </body>

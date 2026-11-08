@@ -1827,7 +1827,10 @@
     },
     "stocks_page": {
       "title": "Aliments, Médicaments & Intrants d'Élevage",
-      "subtitle": "Gestion des sacs d'aliments (démarrage, croissance, finition), prémix, vaccins et litière.",
+      "subtitle": "Gestion des sacs et sachets d'aliments (démarrage, croissance, finition), vitamines, vaccins et litière.",
+      "conditionnement": "Conditionnement",
+      "sachet": "Sachet",
+      "saisir_achat": "Saisir un Achat d'Articles",
       "add_stock": "Entrée de Stock",
       "kpi_total_val": "Valeur du Stock d'Intrants",
       "kpi_alert": "Alertes Seuil Minimum"

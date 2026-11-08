@@ -177,12 +177,14 @@ export const DEMO_ANIMAUX = [
 ]
 
 export const DEMO_INTRANTS = [
-  { id: 'int-1', nom: 'Aliment Finition Chair (Sénégal Aliments)', categorie: 'aliment', unite: 'kg', stock_actuel: 3450, stock_minimum: 1000, prix_unitaire_moyen: 380, latence_jours_defaut: 0 },
-  { id: 'int-2', nom: 'Aliment Démarrage Poussin', categorie: 'aliment', unite: 'kg', stock_actuel: 1200, stock_minimum: 500, prix_unitaire_moyen: 420, latence_jours_defaut: 0 },
-  { id: 'int-3', nom: 'Concentré Laitier 18% (NMA Sanders)', categorie: 'aliment', unite: 'kg', stock_actuel: 1800, stock_minimum: 800, prix_unitaire_moyen: 350, latence_jours_defaut: 0 },
-  { id: 'int-4', nom: 'Cloxacilline Intramammaire', categorie: 'medicament', unite: 'dose', stock_actuel: 15, stock_minimum: 5, prix_unitaire_moyen: 3500, latence_jours_defaut: 5 },
-  { id: 'int-5', nom: 'Vaccin Gumboro (1000 doses)', categorie: 'vaccin', unite: 'flacon', stock_actuel: 8, stock_minimum: 2, prix_unitaire_moyen: 6000, latence_jours_defaut: 0 },
-  { id: 'int-6', nom: 'Vaccin Newcastle Lasota', categorie: 'vaccin', unite: 'flacon', stock_actuel: 12, stock_minimum: 3, prix_unitaire_moyen: 5500, latence_jours_defaut: 0 },
+  { id: 'int-1', nom: 'Aliment Finition Chair (Sénégal Aliments)', categorie: 'aliment', unite: 'sac_50kg', conditionnement: 'sac_50kg', stock_actuel: 70, stock_minimum: 20, prix_unitaire_moyen: 19000, latence_jours_defaut: 0 },
+  { id: 'int-2', nom: 'Aliment Démarrage Poussin', categorie: 'aliment', unite: 'sac_50kg', conditionnement: 'sac_50kg', stock_actuel: 25, stock_minimum: 10, prix_unitaire_moyen: 21000, latence_jours_defaut: 0 },
+  { id: 'int-3', nom: 'Concentré Laitier 18% (NMA Sanders)', categorie: 'aliment', unite: 'sac_50kg', conditionnement: 'sac_50kg', stock_actuel: 35, stock_minimum: 15, prix_unitaire_moyen: 17500, latence_jours_defaut: 0 },
+  { id: 'int-7', nom: 'Sachet Vitamines & Électrolytes AMIN\'TOTAL (100g)', categorie: 'vitamines', unite: 'sachet', conditionnement: 'sachet', stock_actuel: 45, stock_minimum: 10, prix_unitaire_moyen: 2500, latence_jours_defaut: 0 },
+  { id: 'int-8', nom: 'Sachet Antibiotique Poudre Soluble Oxytétracycline (100g)', categorie: 'medicament', unite: 'sachet', conditionnement: 'sachet', stock_actuel: 20, stock_minimum: 5, prix_unitaire_moyen: 3000, latence_jours_defaut: 5 },
+  { id: 'int-4', nom: 'Cloxacilline Intramammaire', categorie: 'medicament', unite: 'dose', conditionnement: 'dose', stock_actuel: 15, stock_minimum: 5, prix_unitaire_moyen: 3500, latence_jours_defaut: 5 },
+  { id: 'int-5', nom: 'Vaccin Gumboro (1000 doses)', categorie: 'vaccin', unite: 'flacon', conditionnement: 'flacon', stock_actuel: 8, stock_minimum: 2, prix_unitaire_moyen: 6000, latence_jours_defaut: 0 },
+  { id: 'int-6', nom: 'Vaccin Newcastle Lasota', categorie: 'vaccin', unite: 'flacon', conditionnement: 'flacon', stock_actuel: 12, stock_minimum: 3, prix_unitaire_moyen: 5500, latence_jours_defaut: 0 },
 ]
 
 export const DEMO_TRAITEMENTS = [

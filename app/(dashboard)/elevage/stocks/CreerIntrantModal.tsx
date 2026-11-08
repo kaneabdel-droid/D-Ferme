@@ -111,16 +111,22 @@ export default function CreerIntrantModal({
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-foreground mb-1">Unité de mesure</label>
+                  <label className="block text-xs font-semibold text-foreground mb-1">Conditionnement *</label>
                   <select
-                    name="unite"
+                    name="conditionnement"
+                    defaultValue="sachet"
                     className="w-full px-3 py-2 text-sm rounded-xl border border-surface-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
-                    <option value="kg">Kilogramme (kg)</option>
+                    <option value="sachet">Sachet</option>
                     <option value="sac_50kg">Sac de 50 kg</option>
+                    <option value="sac_25kg">Sac de 25 kg</option>
+                    <option value="sac">Sac</option>
+                    <option value="kg">Kilogramme (kg)</option>
                     <option value="flacon">Flacon</option>
+                    <option value="boite">Boîte</option>
                     <option value="dose">Dose</option>
                     <option value="litre">Litre (L)</option>
+                    <option value="unite">Unité</option>
                   </select>
                 </div>
                 <div>

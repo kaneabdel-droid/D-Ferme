@@ -2,6 +2,8 @@ import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { Boxes, AlertTriangle, ShieldAlert, Plus, ArrowUpRight, ArrowDownLeft } from 'lucide-react'
 import CreerIntrantModal from './CreerIntrantModal'
+import SaisirAchatModal from './SaisirAchatModal'
+import { DEMO_INTRANTS } from '@/lib/demo-data'
 
 import { getLocale, getDictionary } from '@/dictionaries'
 
@@ -27,7 +29,10 @@ export default async function StocksPage() {
       .order('nom')
   ])
 
-  const alertesStock = intrants?.filter((i) => i.stock_actuel <= i.stock_minimum) || []
+  const isDemo = !intrants || intrants.length === 0
+  const displayIntrants = isDemo ? (DEMO_INTRANTS as any[]) : intrants
+
+  const alertesStock = displayIntrants?.filter((i) => i.stock_actuel <= i.stock_minimum) || []
 
   return (
     <div className="space-y-6">
@@ -40,7 +45,10 @@ export default async function StocksPage() {
             {tStocks.subtitle || "Gestion des approvisionnements en aliments de bétail, vaccins et produits vétérinaires."}
           </p>
         </div>
-        <CreerIntrantModal categories={categories || []} />
+        <div className="flex flex-wrap items-center gap-2">
+          <SaisirAchatModal articles={displayIntrants} />
+          <CreerIntrantModal categories={categories || []} />
+        </div>
       </div>
 
       {/* Alerte stock faible */}
@@ -54,7 +62,7 @@ export default async function StocksPage() {
             <p className="text-xs text-foreground-muted mt-0.5">
               Pensez à renouveler vos commandes pour éviter les ruptures d'alimentation ou de traitement :{' '}
               <span className="font-semibold text-foreground">
-                {alertesStock.map((a) => `${a.nom} (${a.stock_actuel} ${a.unite})`).join(', ')}
+                {alertesStock.map((a) => `${a.nom} (${a.stock_actuel} ${a.conditionnement || a.unite || 'sachet'})`).join(', ')}
               </span>
             </p>
           </div>
@@ -64,7 +72,7 @@ export default async function StocksPage() {
       {/* Grille des articles */}
       <div className="rounded-2xl bg-surface border border-surface-border overflow-hidden shadow-sm">
         <div className="p-5 border-b border-surface-border flex items-center justify-between">
-          <h3 className="font-bold font-heading text-foreground">Inventaire Complet</h3>
+          <h3 className="font-bold font-heading text-foreground">Inventaire Complet des Articles</h3>
         </div>
 
         <div className="overflow-x-auto">
@@ -73,6 +81,7 @@ export default async function StocksPage() {
               <tr>
                 <th className="py-3 px-4">Article</th>
                 <th className="py-3 px-4">Catégorie</th>
+                <th className="py-3 px-4">Conditionnement</th>
                 <th className="py-3 px-4">Stock Actuel</th>
                 <th className="py-3 px-4">Seuil Min</th>
                 <th className="py-3 px-4">Prix Unitaire</th>
@@ -81,10 +90,11 @@ export default async function StocksPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-border">
-              {intrants && intrants.length > 0 ? (
-                intrants.map((i) => {
+              {displayIntrants && displayIntrants.length > 0 ? (
+                displayIntrants.map((i) => {
                   const estBas = i.stock_actuel <= i.stock_minimum
                   const valeurStock = i.stock_actuel * (i.prix_unitaire_moyen || 0)
+                  const cond = (i.conditionnement || i.unite || 'sachet').toLowerCase()
 
                   return (
                     <tr key={i.id} className="hover:bg-black/5">
@@ -94,13 +104,22 @@ export default async function StocksPage() {
                           {i.categorie.replace(/_/g, ' ')}
                         </span>
                       </td>
+                      <td className="py-3 px-4">
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+                          cond === 'sachet'
+                            ? 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/20'
+                            : 'bg-primary/10 text-primary border border-primary/20'
+                        }`}>
+                          {cond === 'sachet' ? 'Sachet' : cond.replace(/_/g, ' ')}
+                        </span>
+                      </td>
                       <td className="py-3 px-4 font-bold">
                         <span className={estBas ? 'text-danger' : 'text-foreground'}>
-                          {i.stock_actuel} {i.unite}
+                          {i.stock_actuel} {i.conditionnement || i.unite || 'sachet'}
                         </span>
                       </td>
                       <td className="py-3 px-4 text-xs text-foreground-muted">
-                        {i.stock_minimum} {i.unite}
+                        {i.stock_minimum} {i.conditionnement || i.unite || 'sachet'}
                       </td>
                       <td className="py-3 px-4 text-xs">
                         {Number(i.prix_unitaire_moyen || 0).toLocaleString('fr-FR')} {tenant?.devise || 'FCFA'}
@@ -122,7 +141,7 @@ export default async function StocksPage() {
                 })
               ) : (
                 <tr>
-                  <td colSpan={7} className="text-center py-8 text-foreground-muted">
+                  <td colSpan={8} className="text-center py-8 text-foreground-muted">
                     Aucun article en stock enregistré.
                   </td>
                 </tr>

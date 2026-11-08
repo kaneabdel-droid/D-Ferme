@@ -2,7 +2,7 @@ import { createClient } from '@/utils/supabase/server'
 import { getTenantContext } from '@/utils/supabase/tenant'
 import { DollarSign, TrendingUp, TrendingDown, Scale, PiggyBank, Sparkles } from 'lucide-react'
 import CreerOperationModal from './CreerOperationModal'
-import { DEMO_FINANCES, DEMO_BANDES, DEMO_ANIMAUX } from '@/lib/demo-data'
+import { DEMO_FINANCES, DEMO_BANDES, DEMO_ANIMAUX, DEMO_INTRANTS } from '@/lib/demo-data'
 
 import { getLocale, getDictionary } from '@/dictionaries'
 
@@ -16,20 +16,23 @@ export default async function FinancesPage() {
   const [
     { data: operations },
     { data: bandes },
-    { data: animaux }
+    { data: animaux },
+    { data: intrants }
   ] = await Promise.all([
     supabase
       .from('finances_elevage')
-      .select('*, bandes(code_bande), animaux(numero_boucle)')
+      .select('*, bandes(code_bande), animaux(numero_boucle), intrants(nom, conditionnement, unite)')
       .order('date_operation', { ascending: false }),
     supabase.from('bandes').select('id, code_bande, statut').order('created_at', { ascending: false }),
-    supabase.from('animaux').select('id, numero_boucle, etat_sante').order('created_at', { ascending: false })
+    supabase.from('animaux').select('id, numero_boucle, etat_sante').order('created_at', { ascending: false }),
+    supabase.from('intrants').select('id, nom, categorie, unite, conditionnement, stock_actuel, prix_unitaire_moyen').order('nom')
   ])
 
   const isDemo = !operations || operations.length === 0
   const displayOperations = isDemo ? (DEMO_FINANCES as any[]) : operations
   const displayBandes = (bandes && bandes.length > 0) ? bandes : DEMO_BANDES
   const displayAnimaux = (animaux && animaux.length > 0) ? animaux : DEMO_ANIMAUX
+  const displayIntrants = (intrants && intrants.length > 0) ? intrants : DEMO_INTRANTS
 
   // Calculs totaux
   let totalRevenus = 0
@@ -61,6 +64,7 @@ export default async function FinancesPage() {
         <CreerOperationModal
           bandes={displayBandes}
           animaux={displayAnimaux}
+          intrants={displayIntrants}
         />
       </div>
 

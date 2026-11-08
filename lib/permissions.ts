@@ -46,14 +46,90 @@ export function moduleForPath(pathname: string): string | null {
   return null
 }
 
+export function fullPermissions(): PermissionMap {
+  return Object.fromEntries(PERMISSION_MODULES.map((m) => [m.key, [...m.actions]]))
+}
+
+export function readOnlyPermissions(): PermissionMap {
+  return Object.fromEntries(
+    PERMISSION_MODULES.filter((m) => m.key !== 'parametres').map((m) => [m.key, ['read' as PermissionAction]])
+  )
+}
+
+export function sanitizePermissions(input: unknown): PermissionMap {
+  const out: PermissionMap = {}
+  if (!input || typeof input !== 'object') return out
+  for (const m of PERMISSION_MODULES) {
+    const raw = (input as Record<string, unknown>)[m.key]
+    if (!Array.isArray(raw)) continue
+    const actions = m.actions.filter((a) => raw.includes(a))
+    if (actions.length === 0) continue
+    if (!actions.includes('read') && m.actions.includes('read')) actions.unshift('read')
+    out[m.key] = actions
+  }
+  return out
+}
+
+export function defaultPermissionsForRole(role?: string | null): PermissionMap | null {
+  const r = (role || 'agent').trim().toLowerCase()
+  if (r === 'admin') return null
+  if (r === 'veterinaire') {
+    return sanitizePermissions({
+      dashboard: ['read'],
+      bandes: ['read', 'update'],
+      animaux: ['read', 'update'],
+      suivi: ['read', 'create', 'update'],
+      sanitaire: ['read', 'create', 'update', 'delete'],
+      stocks: ['read'],
+      batiments: ['read'],
+    })
+  }
+  if (r === 'comptable') {
+    return sanitizePermissions({
+      dashboard: ['read'],
+      finances: ['read', 'create', 'update', 'delete'],
+      stocks: ['read'],
+      suivi: ['read'],
+      bandes: ['read'],
+      animaux: ['read'],
+    })
+  }
+  if (r === 'responsable') {
+    return sanitizePermissions({
+      dashboard: ['read'],
+      bandes: ['read', 'create', 'update'],
+      animaux: ['read', 'create', 'update'],
+      suivi: ['read', 'create', 'update'],
+      sanitaire: ['read', 'create', 'update'],
+      stocks: ['read', 'create', 'update'],
+      batiments: ['read', 'create', 'update'],
+      finances: ['read', 'create', 'update'],
+    })
+  }
+  if (r === 'agent' || r === 'ouvrier') {
+    return sanitizePermissions({
+      dashboard: ['read'],
+      bandes: ['read', 'create', 'update'],
+      animaux: ['read', 'create', 'update'],
+      suivi: ['read', 'create', 'update'],
+      sanitaire: ['read', 'create'],
+      stocks: ['read', 'create', 'update'],
+      batiments: ['read', 'create', 'update'],
+    })
+  }
+  return readOnlyPermissions()
+}
+
 export function hasPermission(
   role: string | null | undefined,
   permissions: PermissionMap | null | undefined,
   moduleKey: string,
   action: PermissionAction
 ): boolean {
-  if (role === 'admin' || !permissions) return true
-  return permissions[moduleKey]?.includes(action) ?? false
+  if (role === 'admin') return true
+  const effectivePermissions = permissions ?? defaultPermissionsForRole(role)
+  if (!effectivePermissions) return true
+  return effectivePermissions[moduleKey]?.includes(action) ?? false
 }
 
 const DEFAULT_FIRST_PATHS: [string, string][] = [

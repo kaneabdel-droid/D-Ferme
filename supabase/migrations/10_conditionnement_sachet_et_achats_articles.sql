@@ -25,3 +25,4 @@ SET conditionnement = CASE
   ELSE COALESCE(conditionnement, unite, 'sachet')
 END
 WHERE conditionnement IS NULL;
+

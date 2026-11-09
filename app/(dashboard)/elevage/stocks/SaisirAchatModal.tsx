@@ -52,11 +52,11 @@ export default function SaisirAchatModal({
       prev.map((l) =>
         l.id === ligneId
           ? {
-              ...l,
-              intrant_id: intrantId,
-              prix_unitaire: art?.prix_unitaire_moyen || 0,
-              conditionnement: art?.conditionnement || art?.unite || 'sachet'
-            }
+            ...l,
+            intrant_id: intrantId,
+            prix_unitaire: art?.prix_unitaire_moyen || 0,
+            conditionnement: art?.conditionnement || art?.unite || 'sachet'
+          }
           : l
       )
     )
@@ -381,3 +381,4 @@ export default function SaisirAchatModal({
     </>
   )
 }
+

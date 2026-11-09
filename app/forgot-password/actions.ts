@@ -1,0 +1,148 @@
+'use server'
+
+import { createClient } from '@/utils/supabase/server'
+import { createAdminClient } from '@/utils/supabase/admin'
+import { redirect } from 'next/navigation'
+import { estEmailSynthetique, resoudreAuthEmail } from '@/lib/auth-identifier'
+
+export async function resetPasswordForEmail(formData: FormData) {
+  const supabase = await createClient()
+  const rawInput = ((formData.get('email') as string) || (formData.get('identifier') as string) || '').trim()
+  const isAdmin = formData.get('admin') === '1'
+  const adminQuery = isAdmin ? '?admin=1' : ''
+
+  if (!rawInput) {
+    return redirect(`/forgot-password?message=${encodeURIComponent('Veuillez renseigner votre identifiant, téléphone ou e-mail.')}${isAdmin ? '&admin=1' : ''}`)
+  }
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+  const next = encodeURIComponent(`/update-password${adminQuery}`)
+  const redirectTo = `${siteUrl}/auth/callback?next=${next}`
+
+  // 1. Si la saisie est manifestement une adresse e-mail réelle (contient '@' ailleurs qu'en début et hors domaine interne)
+  if (rawInput.includes('@') && !rawInput.startsWith('@') && !estEmailSynthetique(rawInput)) {
+    const { error } = await supabase.auth.resetPasswordForEmail(rawInput, {
+      redirectTo,
+    })
+
+    if (error) {
+      const params = new URLSearchParams({ message: error.message })
+      if (isAdmin) params.set('admin', '1')
+      return redirect(`/forgot-password?${params.toString()}`)
+    }
+
+    return redirect(
+      `${isAdmin ? '/admin/login' : '/login'}?message=${encodeURIComponent(
+        'Vérifiez votre boîte mail pour le lien de réinitialisation.'
+      )}`
+    )
+  }
+
+  // 2. Traitement d'un identifiant, nom ou numéro de téléphone (compte collaborateur/éleveur sans e-mail obligatoire)
+  try {
+    const adminSupabase = createAdminClient()
+    const resolved = await resoudreAuthEmail(rawInput, adminSupabase)
+
+    if (resolved.email) {
+      // Cas A : L'utilisateur a une adresse e-mail réelle enregistrée
+      if (!estEmailSynthetique(resolved.email)) {
+        await supabase.auth.resetPasswordForEmail(resolved.email, { redirectTo })
+        return redirect(
+          `${isAdmin ? '/admin/login' : '/login'}?message=${encodeURIComponent(
+            'Un lien de réinitialisation a été envoyé à votre adresse e-mail.'
+          )}`
+        )
+      }
+
+      // Cas B : Compte collaborateur sans e-mail personnel (utilise un alias interne)
+      // Génération du lien magique de récupération sécurisé
+      const { data: linkData } = await adminSupabase.auth.admin.generateLink({
+        type: 'recovery',
+        email: resolved.email,
+        options: { redirectTo },
+      })
+
+      const recoveryLink = linkData?.properties?.action_link
+
+      if (recoveryLink && resolved.userId) {
+        // Recherche de l'utilisateur et de son exploitation rattachée
+        const { data: userRow } = await adminSupabase
+          .from('utilisateurs')
+          .select('id, nom_complet, entreprise_id, entreprises(nom, email)')
+          .eq('id', resolved.userId)
+          .maybeSingle()
+
+        const entData = userRow?.entreprises as { nom?: string; email?: string } | null
+        let adminEmail = entData?.email
+
+        if (!adminEmail && userRow?.entreprise_id) {
+          const { data: adminUsers } = await adminSupabase
+            .from('utilisateurs')
+            .select('id')
+            .eq('entreprise_id', userRow.entreprise_id)
+            .eq('role', 'admin')
+            .limit(5)
+
+          for (const adm of adminUsers ?? []) {
+            const { data: admAuth } = await adminSupabase.auth.admin.getUserById(adm.id)
+            if (admAuth?.user?.email && !estEmailSynthetique(admAuth.user.email)) {
+              adminEmail = admAuth.user.email
+              break
+            }
+          }
+        }
+
+        // Si un e-mail d'administrateur est trouvé, notification par email
+        if (adminEmail && process.env.RESEND_API_KEY) {
+          const supportFrom =
+            process.env.SUPPORT_FROM_EMAIL || 'DembaSolution Support <noreply@dembasolution.com>'
+          const entNom = entData?.nom || 'votre exploitation'
+          const employeNom = userRow?.nom_complet || rawInput
+
+          await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              from: supportFrom,
+              to: [adminEmail],
+              subject: `[D-FERME] Réinitialisation de mot de passe pour ${employeNom}`,
+              html: `
+                <div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:20px;border:1px solid #e2e8f0;border-radius:10px;">
+                  <h2 style="color:#10b981;margin-bottom:8px;">D-FERME - Assistance Mot de Passe</h2>
+                  <p>Bonjour,</p>
+                  <p>Votre collaborateur <strong>${employeNom}</strong> de <strong>${entNom}</strong> a demandé à réinitialiser son mot de passe de connexion.</p>
+                  <p>N'ayant pas d'adresse e-mail personnelle directe, vous recevez son lien magique sécurisé en tant qu'administrateur du compte :</p>
+                  <div style="margin:24px 0;text-align:center;">
+                    <a href="${recoveryLink}" style="background:#10b981;color:#ffffff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:bold;display:inline-block;">
+                      Ouvrir le lien de réinitialisation
+                    </a>
+                  </div>
+                  <p style="font-size:13px;color:#64748b;line-height:1.5;">Vous pouvez également lui copier-coller directement ce lien par WhatsApp ou SMS :<br/><a href="${recoveryLink}">${recoveryLink}</a></p>
+                  <p style="font-size:12px;color:#94a3b8;margin-top:24px;">Ce lien temporaire permet de définir un nouveau mot de passe.</p>
+                </div>
+              `,
+            }),
+          })
+        }
+
+        return redirect(
+          `${isAdmin ? '/admin/login' : '/login'}?message=${encodeURIComponent(
+            "Demande transmise avec succès ! Un lien de réinitialisation a été envoyé à l'administrateur de votre exploitation. Veuillez le contacter pour obtenir votre accès."
+          )}`
+        )
+      }
+    }
+  } catch (err) {
+    console.error('[forgot-password] Erreur de résolution :', err)
+  }
+
+  // Réponse générique pour éviter l'énumération des comptes
+  return redirect(
+    `${isAdmin ? '/admin/login' : '/login'}?message=${encodeURIComponent(
+      'Si cet identifiant correspond à un compte actif, les instructions de réinitialisation ont été transmises.'
+    )}`
+  )
+}

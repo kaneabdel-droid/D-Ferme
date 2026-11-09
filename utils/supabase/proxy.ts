@@ -85,6 +85,7 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith('/forgot-password') ||
     pathname.startsWith('/update-password') ||
     pathname.startsWith('/auth') ||
+    pathname.startsWith('/signout') ||
     pathname.startsWith('/demo') ||
     pathname.startsWith('/decouvrir-delevage') ||
     pathname.startsWith('/guide') ||

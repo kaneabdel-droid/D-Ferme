@@ -93,10 +93,10 @@ export default function ClientNavbar({ dict, currentLang }: { dict?: any, curren
               {nav.login || 'Connexion'}
             </Link>
             <Link
-              href="/signup?plan=medium&action=abonnement"
-              className="hidden sm:inline-flex rounded-full bg-primary px-4 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-primary-hover transition-all whitespace-nowrap"
+              href="/signup"
+              className="hidden sm:inline-flex rounded-full bg-primary px-4 py-1.5 text-sm font-bold text-white shadow-sm hover:bg-primary-hover transition-all whitespace-nowrap"
             >
-              {nav.subscribe || "S'abonner"}
+              {nav.signup || 'Créer mon exploitation'}
             </Link>
             <button
               type="button"

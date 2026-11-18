@@ -10,7 +10,8 @@ import {
   Mail,
   Phone,
   MessageSquare,
-  MapPin
+  MapPin,
+  Sparkles
 } from 'lucide-react'
 import ClientNavbar from '@/components/ClientNavbar'
 import { getDictionary, getLocale } from '@/dictionaries'
@@ -42,10 +43,12 @@ export default async function LandingPage() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link
-                href="/signup?plan=medium"
-                className="px-6 py-3.5 rounded-xl bg-primary text-white font-semibold shadow-lg shadow-primary/20 hover:bg-primary-hover transition-all flex items-center gap-2"
+                href="/signup"
+                className="px-7 py-3.5 rounded-xl bg-primary text-white font-bold shadow-lg shadow-primary/25 hover:bg-primary-hover hover:scale-[1.02] transition-all flex items-center gap-2"
               >
-                {hero.cta_start || 'Commencer maintenant'} <ArrowRight className="w-4 h-4 rtl:-scale-x-100" />
+                <Sparkles className="w-4 h-4" />
+                <span>{hero.cta_start || 'Créer mon exploitation (Essai gratuit 7j)'}</span>
+                <ArrowRight className="w-4 h-4 rtl:-scale-x-100" />
               </Link>
               <Link
                 href="/demo"
